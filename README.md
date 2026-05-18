@@ -1,221 +1,106 @@
-# MedAgenda — Sistema de Gestión de Citas Médicas (SGCM)
+# MedAgenda — Sistema de Gestion de Citas Medicas (SGCM)
 
-Proyecto académico de aplicación web y desktop de sistema de gestión de citas médicas  
-**Profesor:** Francis Ramirez · **Asignatura:** Programación II · **ITLA 2026**
+Proyecto academico de Programacion II (ITLA 2026).
 
----
+## Nota sobre ramas y autoria
 
+Las ramas sin matricula (`feature/api`, `feature/ioc`, `feature/application`, `feature/dominio`, `feature/persistencia`, `feature/unittest`) fueron trabajadas en conjunto por Johan Vasquez y Gregori Evangelista.
 
-## 📋 Descripción del Proyecto
+## Descripcion del proyecto
 
-MedAgenda es un sistema de software diseñado para gestionar de forma integral el ciclo de vida de las citas médicas en clínicas y centros de salud. El sistema centraliza la información de pacientes, médicos y citas, eliminando los procesos manuales que generan errores, duplicidad de información y mala comunicación entre los actores del sistema.
+MedAgenda centraliza la gestion de pacientes, medicos y citas para reducir conflictos de horario, errores operativos y carga administrativa.
 
-### Problema que resuelve
+### Actores
 
-Actualmente muchos centros médicos gestionan sus citas de forma manual o con herramientas no especializadas, lo que genera:
-
-- Conflictos de horarios y doble asignación de citas
-- Falta de notificaciones oportunas a pacientes y médicos
-- Ausencia de trazabilidad y control centralizado
-- Carga administrativa excesiva que afecta la calidad del servicio
-
-### Actores del sistema
-
-| Actor | Descripción |
-|-------|-------------|
-| Paciente | Busca médicos, programa, consulta y cancela sus citas |
-| Médico | Gestiona su agenda, disponibilidad e historial de pacientes |
-| Administrador | Gestiona usuarios, roles, especialidades y catálogos del sistema |
+- Paciente: busca medicos, agenda y gestiona sus citas.
+- Medico: administra agenda, disponibilidad e historial de pacientes.
+- Administrador: gestiona usuarios, especialidades, proveedores y auditoria.
 
 ### Alcance
 
-✅ **El sistema cubre:**
-- Gestión completa del ciclo de vida de citas médicas
-- Gestión de disponibilidad de médicos
-- Gestión de pacientes, médicos y especialidades
-- Gestión de proveedores de salud
-- Envío de notificaciones y recordatorios (Email, SMS, Push)
-- Registro histórico y auditoría de operaciones
-- Facturación médica y pagos en línea (Stripe)
-- Asistente virtual con IA (Claude API)
+Incluye:
 
-❌ **Fuera de alcance:**
-- Expedientes clínicos completos
-- Diagnósticos automatizados o soporte médico con IA clínica
-- Despliegue en producción real en nube (solo entorno local + Supabase hosting)
-- Aplicaciones móviles nativas
+- Gestion del ciclo de vida de citas.
+- Gestion de disponibilidad medica.
+- Gestion de pacientes, medicos y especialidades.
+- Notificaciones (Email/SMS/Push).
+- Auditoria.
+- Pagos en linea.
+- Asistente virtual con IA.
 
----
+Fuera de alcance:
 
-## 🏗️ Arquitectura
+- Expedientes clinicos completos.
 
-MedAgenda está construido bajo una **Arquitectura en Capas (Layering) con Clean Architecture** en el backend, garantizando separación de responsabilidades, mantenibilidad y escalabilidad.
+## Stack tecnologico
 
-### Stack tecnológico
+- Backend: .NET 8 Web API
+- Web: Next.js (React)
+- Desktop: .NET MAUI
+- DB: PostgreSQL (Supabase como hosting)
+- ORM: Entity Framework Core
+- Auth: JWT
+- Real-time: SignalR
+- Pagos: Stripe
+- Chatbot: Groq (API compatible OpenAI)
+- Cache: Redis
+- Notificaciones: SMTP (MailKit) y Twilio
+- Logging: Serilog via `ISGCLogger`
 
-| Capa | Tecnología |
-|------|------------|
-| Portal Web (Pacientes/Admin) | Next.js (React) |
-| App de Escritorio (Médicos) | .NET MAUI |
-| Backend API | .NET 8 Web API |
-| Base de Datos | PostgreSQL (Supabase Cloud — solo hosting) |
-| ORM | Entity Framework Core |
-| Autenticación | JWT custom (sin Supabase Auth) |
-| Tiempo Real | SignalR (WebSockets) |
-| Notificaciones Email | MailKit / SMTP |
-| Notificaciones SMS | Twilio API |
-| Caché | Redis |
-| Pagos | Stripe API |
-| Chatbot IA | Claude API (Anthropic) |
-| Logging | Serilog via ISGCLogger |
-| CI/CD | GitHub Actions |
+## Estructura de la solucion
 
-### Estructura de la solución
+- `SGC.Domain`
+- `SGC.Application`
+- `SGC.Persistence`
+- `SGC.Infraestructure`
+- `SGC.IOC`
+- `SGC.API`
+- `SGC.Web`
+- `DoctorApp`
+- `SGC.ApplicationTest`
 
-```
-SGC Solution
-├── Core/
-│   ├── SGC.Domain          ← Entidades, interfaces, enums, excepciones, validadores
-│   └── SGC.Application     ← Servicios de casos de uso, DTOs, Mappers, Contracts
-├── Infrastructure/
-│   ├── SGC.Infrastructure  ← Email, SMS, SignalR, Stripe, Claude, Redis, Logging
-│   └── SGC.Persistence     ← EF Core, repositorios y migraciones
-├── API/
-│   └── SGC.API             ← 12 Controllers, JWT Auth, Swagger, Middleware
-├── IOC/
-│   └── SGC.IOC             ← Inyección de dependencias (DependencyContainer)
-├── Web/
-│   ├── sgc.web.client      ← Next.js (portal paciente y panel admin)
-│   └── SGC.Web.Server      ← BFF / Proxy, SSR, Middleware Web
-├── Desktop/
-│   └── SGC.Desktop         ← .NET MAUI (gestión médica — App Médico)
-└── ApplicationTest/
-    └── SGC.ApplicationTest ← Pruebas unitarias e integración (xUnit + Moq)
-```
+## Division de trabajo (evaluacion)
 
-### Capas del Backend
+### Johan Vasquez (2025-1235)
 
-```
-┌─────────────────────────────────────────────────────┐
-│          Capa de Presentación (Frontend)             │  Next.js + .NET MAUI
-├─────────────────────────────────────────────────────┤
-│          Capa de API (Controllers)                   │  .NET 8 Web API — 12 Controllers
-├─────────────────────────────────────────────────────┤
-│          Capa de Aplicación (Casos de Uso)           │  Servicios, DTOs, Mappers
-├─────────────────────────────────────────────────────┤
-│          Capa de Dominio (Core)                      │  Entidades, Interfaces, Reglas
-├─────────────────────────────────────────────────────┤
-│     Persistencia          │     Infraestructura      │  EF Core / Email, SMS, Stripe...
-└─────────────────────────────────────────────────────┘
+- Portal Paciente (registro/login, busqueda medicos, agendamiento, mis citas, pagos, notificaciones, chatbot).
+- Panel Administrador (usuarios, medicos, especialidades, proveedores, auditoria).
+
+### Gregori Evangelista (2025-1232)
+
+- App Medico (agenda, gestion de citas, disponibilidad, historial de pacientes, seguridad JWT).
+
+## Ramas
+
+- `feature/web-20251235` (Web - Johan)
+- `feature/Desktop-20251232` (Desktop - Gregori)
+- Ramas compartidas: `feature/api`, `feature/ioc`, `feature/infraestructure`, `feature/dominio`, `feature/persistencia`, `feature/application`, `feature/unittest`
+
+## API
+
+Swagger UI local: `http://localhost:5189/swagger`
+
+## Docker quickstart
+
+1. Copy `.env.example` to `.env` and set real values.
+2. Start API container:
+
+```bash
+docker compose up --build -d
 ```
 
-### Principios aplicados
+3. Verify API is up at `http://localhost:5189/swagger`.
 
-- **Clean Architecture** — El núcleo del sistema es independiente de frameworks y tecnologías externas
-- **DIP (Inversión de Dependencias)** — Interfaces definidas en el dominio, implementaciones en Infrastructure
-- **Patrón Repository** — Abstracción del acceso a datos
-- **MVVM** — Patrón aplicado en la aplicación de escritorio (.NET MAUI)
-- **MVC** — Patrón aplicado en el portal web (Next.js)
+Notes:
 
----
+- `docker-compose.yml` maps container port `8080` to host `5189`.
+- Database/Redis in `.env.example` use `host.docker.internal` so local services can be used from container.
+- Configure CORS origins using `SGC_CORS_ORIGIN_0`/`SGC_CORS_ORIGIN_1` (or `Cors:AllowedOrigins`).
+- Outside Development, API startup fails if `Cors:AllowedOrigins` is not configured.
 
-## 👥 Equipo y División de Trabajo
+## Documentacion
 
-> Las capas compartidas del backend (SGC.Domain, SGC.Application, SGC.Persistence, SGC.Infrastructure, SGC.IOC, SGC.API) fueron desarrolladas **en conjunto** por ambos integrantes.
+- SRS MedAgenda
+- SAD MedAgenda
 
-### Johan Vasquez — Matrícula: 2025-1235
-
-**Portal Web (sgc.web.client + SGC.Web.Server):**
-- Módulo de Registro y Login
-- Módulo de Búsqueda de Médicos
-- Módulo de Agendamiento de Citas
-- Módulo de Mis Citas
-- Módulo de Pagos (Stripe)
-- Módulo de Notificaciones
-- Módulo de Chatbot (Claude API)
-
-**Panel Administrador:**
-- Módulo de Gestión de Usuarios
-- Módulo de Gestión de Médicos
-- Módulo de Gestión de Especialidades
-- Módulo de Gestión de Proveedores
-- Módulo de Auditoría
-
-**Ramas:** `feature/web-20251235`, y ramas compartidas sin matrícula.
-
----
-
-### Gregori Evangelista — Matrícula: 2025-1232
-
-**App Médico Desktop (SGC.Desktop — .NET MAUI):**
-- Módulo de Agenda Médica
-- Módulo de Gestión de Citas (confirmar, iniciar, completar, asistencia)
-- Módulo de Disponibilidad
-- Módulo de Historial de Pacientes
-- Módulo de Seguridad JWT (Desktop)
-
-**Ramas:** `feature/Desktop-20251232`, `feature/desktop-agenda-20251232`, `feature/desktop-citas-20251232`, `feature/desktop-disponibilidad-20251232`, `feature/desktop-pacientes-20251232`, `feature/desktop-seguridad-jwt-20251232`, y ramas compartidas sin matrícula.
-
----
-
-## 🔌 API REST
-
-**Swagger UI:** `http://localhost:5189/swagger`
-
-### Ramas por integrante
-
-| Rama | Integrante | Descripción |
-|------|------------|-------------|
-| `feature/api` | Conjunto (ambos) | Controllers, Middleware, Program.cs, Swagger |
-| `feature/ioc` | Conjunto (ambos) | DependencyContainer — registro de dependencias |
-| `feature/application` | Conjunto (ambos) | Servicios, DTOs, Mappers, Contracts |
-| `feature/dominio` | Conjunto (ambos) | Entidades, interfaces, enums, excepciones, validators |
-| `feature/persistencia` | Conjunto (ambos) | DbContext, repositorios EF Core, migraciones |
-| `feature/unittest` | Conjunto (ambos) | Pruebas unitarias xUnit + Moq |
-| `feature/infraestructure` | Conjunto (ambos) | Email, SMS, SignalR, Stripe, Claude, Redis, Serilog |
-| `feature/web-20251235` | Johan Vasquez | Portal Web Next.js — Portal Paciente + Panel Admin |
-| `feature/Desktop-20251232` | Gregori Evangelista | App Desktop .NET MAUI — estructura base |
-| `feature/desktop-agenda-20251232` | Gregori Evangelista | Módulo Agenda Médica |
-| `feature/desktop-citas-20251232` | Gregori Evangelista | Módulo Gestión de Citas |
-| `feature/desktop-disponibilidad-20251232` | Gregori Evangelista | Módulo Disponibilidad |
-| `feature/desktop-pacientes-20251232` | Gregori Evangelista | Módulo Historial de Pacientes |
-| `feature/desktop-seguridad-jwt-20251232` | Gregori Evangelista | Módulo Seguridad JWT (Desktop) |
-
----
-
-## 🔌 API REST
-
-**Swagger UI:** `http://localhost:5189/swagger`
-
-| Controller | Endpoints principales |
-|------------|-----------------------|
-| AuthController | POST /api/auth/login, POST /api/auth/refresh |
-| CitasController | POST /api/citas, GET /api/citas/paciente/{id}, GET /api/citas/medico/agenda, PUT /{id}/cancelar, PUT /{id}/reprogramar, PUT /{id}/confirmar, PUT /{id}/iniciar-consulta, PUT /{id}/asistencia |
-| MedicosController | GET /api/medicos, GET /api/medicos/{id}, POST, PUT |
-| PacientesController | POST /api/pacientes, GET /api/pacientes/{id}, PUT |
-| DisponibilidadController | POST/PUT/DELETE /api/disponibilidad |
-| EspecialidadesController | GET/POST/PUT /api/especialidades |
-| ProveedoresController | GET/POST/PUT /api/proveedores |
-| UsuariosController | GET/PUT /api/usuarios |
-| NotificacionesController | GET /api/Notificaciones/usuario/{id} |
-| PagosController | POST /api/Pagos/crear-intento |
-| ChatbotController | POST /api/chatbot/mensaje |
-| AuditoriaController | GET /api/auditoria |
-
-### Comunicación en tiempo real (SignalR)
-
-- **CitaHub** — Notificaciones push de nuevas citas al médico en la app desktop
-- **DisponibilidadHub** — Actualización automática de disponibilidad médica en el calendario web
-
----
-
-## 📄 Documentación
-
-| Documento | Descripción |
-|-----------|-------------|
-| SRS MedAgenda | Especificación de Requisitos de Software |
-| SAD MedAgenda v1.1 | Documento de Arquitectura de Software (actualizado 23/03/2026) |
-
----
-
-ITLA — Instituto Tecnológico de las Américas · Programación II · 2026
+ITLA - 2026

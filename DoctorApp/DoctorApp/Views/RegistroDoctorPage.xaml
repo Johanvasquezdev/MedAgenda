@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DoctorApp.Views.RegistroDoctorPage"
+             Title="Registro de Doctor">
+
+    <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Fill">
+
+        <!-- Título -->
+        <Label 
+            Text="Registrar Doctor"
+            FontSize="28"
+            FontAttributes="Bold"
+            HorizontalTextAlignment="Center"
+            Margin="0,0,0,20" />
+
+        <!-- Nombre -->
+        <Label Text="Nombre" FontSize="14" FontAttributes="Bold" />
+        <Entry 
+            Placeholder="Ej: Juan"
+            Text="{Binding Nombre}" 
+            FontSize="14" />
+
+        <!-- Apellido -->
+        <Label Text="Apellido" FontSize="14" FontAttributes="Bold" />
+        <Entry 
+            Placeholder="Ej: Pérez García"
+            Text="{Binding Apellido}"
+            FontSize="14" />
+
+        <!-- Especialidad -->
+        <Label Text="Especialidad" FontSize="14" FontAttributes="Bold" />
+        <Entry 
+            Placeholder="Ej: Cardiología"
+            Text="{Binding Especialidad}"
+            FontSize="14" />
+
+        <!-- Email (opcional) -->
+        <Label Text="Email (Opcional)" FontSize="14" FontAttributes="Bold" />
+        <Entry 
+            Placeholder="correo@hospital.com"
+            Text="{Binding Email}"
+            Keyboard="Email"
+            FontSize="14" />
+
+        <!-- Teléfono (opcional) -->
+        <Label Text="Teléfono (Opcional)" FontSize="14" FontAttributes="Bold" />
+        <Entry 
+            Placeholder="+34 600 123 456"
+            Text="{Binding Telefono}"
+            FontSize="14" />
+
+        <!-- Botón Registrar -->
+        <Button 
+            Text="Registrar Doctor"
+            Command="{Binding RegistrarCommand}"
+            FontSize="16"
+            FontAttributes="Bold"
+            Padding="10"
+            Margin="0,20,0,0" />
+
+        <!-- Mensaje de Estado -->
+        <Label 
+            Text="{Binding MensajeEstado}"
+            FontSize="12"
+            TextColor="Red"
+            HorizontalTextAlignment="Center"
+            IsVisible="{Binding MostrarMensaje}" />
+
+        <!-- Indicador de Carga -->
+        <ActivityIndicator 
+            IsRunning="{Binding IsBusy}"
+            IsVisible="{Binding IsBusy}"
+            Margin="0,20,0,0" />
+
+    </VerticalStackLayout>
+
+</ContentPage>

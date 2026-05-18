@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DoctorApp.Views.DashboardPage"
+             Title="Panel de Control"
+             BackgroundColor="#F5F7FA">
+
+    <VerticalStackLayout Padding="0" Spacing="0">
+        <!-- Header Personalizado -->
+        <Frame CornerRadius="0" Padding="20" HasShadow="False" BackgroundColor="#6B46C1" Margin="0">
+            <VerticalStackLayout Spacing="8">
+                <Label Text="{Binding MedicoActual.NombreCompleto}"
+                       FontSize="20" FontAttributes="Bold"
+                       TextColor="White"/>
+                <Label Text="{Binding MedicoActual.Especialidad}"
+                       FontSize="13"
+                       TextColor="#E9D5FF"/>
+                <Label Text="{Binding MedicoActual.Consultorio, StringFormat='Consultorio {0}'}"
+                       FontSize="12"
+                       TextColor="#E9D5FF"/>
+                <Label Text="{Binding FechaSeleccionada, StringFormat='{0:dddd, dd MMMM yyyy}'}"
+                       FontSize="11"
+                       TextColor="#D8B4FE"/>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Contenido Principal -->
+        <ScrollView>
+            <VerticalStackLayout Padding="20" Spacing="15">
+                <!-- Estadísticas Cards -->
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="12">
+                    <!-- Card Citas Hoy -->
+                    <Frame Grid.Row="0" Grid.Column="0"
+                           CornerRadius="12" Padding="15" HasShadow="True"
+                           BackgroundColor="White" HeightRequest="100">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="{Binding TotalCitasHoy, StringFormat='{0}'}"
+                                   FontSize="28" FontAttributes="Bold"
+                                   TextColor="#6B46C1"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="Citas Hoy"
+                                   FontSize="12"
+                                   TextColor="#6B7280"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Card Confirmadas -->
+                    <Frame Grid.Row="0" Grid.Column="1"
+                           CornerRadius="12" Padding="15" HasShadow="True"
+                           BackgroundColor="White" HeightRequest="100">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="{Binding CitasConfirmadas, StringFormat='{0}'}"
+                                   FontSize="28" FontAttributes="Bold"
+                                   TextColor="#10B981"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="Confirmadas"
+                                   FontSize="12"
+                                   TextColor="#6B7280"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Card Pendientes -->
+                    <Frame Grid.Row="1" Grid.Column="0"
+                           CornerRadius="12" Padding="15" HasShadow="True"
+                           BackgroundColor="White" HeightRequest="100">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="{Binding CitasPendientes, StringFormat='{0}'}"
+                                   FontSize="28" FontAttributes="Bold"
+                                   TextColor="#F59E0B"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="Pendientes"
+                                   FontSize="12"
+                                   TextColor="#6B7280"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Card Canceladas / No Asistio -->
+                    <Frame Grid.Row="1" Grid.Column="1"
+                           CornerRadius="12" Padding="15" HasShadow="True"
+                           BackgroundColor="White" HeightRequest="100">
+                        <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                            <Label Text="{Binding CitasCanceladas, StringFormat='{0}'}"
+                                   FontSize="28" FontAttributes="Bold"
+                                   TextColor="#EF4444"
+                                   HorizontalOptions="Center"/>
+                            <Label Text="Canceladas"
+                                   FontSize="12"
+                                   TextColor="#6B7280"
+                                   HorizontalOptions="Center"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <!-- Selector de Fecha -->
+                <Frame CornerRadius="12" Padding="15" HasShadow="True" BackgroundColor="White">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Seleccionar Fecha" FontSize="14" FontAttributes="Bold" TextColor="#1F2937"/>
+                        <DatePicker Date="{Binding FechaSeleccionada}"
+                                   BackgroundColor="#F3F4F6"
+                                   Format="dd/MM/yyyy"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Citas del Día -->
+                <Label Text="Citas de Hoy" FontSize="16" FontAttributes="Bold" TextColor="#1F2937" Margin="0,10,0,5"/>
+
+                <CollectionView ItemsSource="{Binding CitasHoy}" SelectionMode="Single">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame CornerRadius="10" Padding="15" Margin="0,5" HasShadow="True" BackgroundColor="White">
+                                <HorizontalStackLayout Spacing="12">
+                                    <!-- Hora -->
+                                    <VerticalStackLayout WidthRequest="60" VerticalOptions="Center">
+                                        <Label Text="{Binding FechaHora, StringFormat='{0:HH:mm}'}"
+                                               FontSize="16" FontAttributes="Bold"
+                                               TextColor="#1F2937"/>
+                                        <Label Text="{Binding DuracionMinutos, StringFormat='{0}min'}"
+                                               FontSize="11"
+                                               TextColor="#9CA3AF"/>
+                                    </VerticalStackLayout>
+
+                                    <!-- Separator -->
+                                    <BoxView WidthRequest="1" BackgroundColor="#E5E7EB"/>
+
+                                    <!-- Info -->
+                                    <VerticalStackLayout HorizontalOptions="FillAndExpand" Spacing="3">
+                                        <Label Text="{Binding Paciente.NombreCompleto}"
+                                               FontSize="14" FontAttributes="Bold"
+                                               TextColor="#1F2937"/>
+                                        <Label Text="{Binding Motivo}"
+                                               FontSize="12"
+                                               TextColor="#6B7280"/>
+                                    </VerticalStackLayout>
+
+                                    <!-- Estado Badge -->
+                                     <Frame CornerRadius="6" Padding="8,4"
+                                            BackgroundColor="{Binding Estado, Converter={StaticResource EstadoCitaColorConverter}}"
+                                            WidthRequest="80"
+                                            HasShadow="False">
+                                        <Label Text="{Binding Estado, Converter={StaticResource EstadoCitaTextoConverter}}"
+                                               FontSize="11" FontAttributes="Bold"
+                                               TextColor="White"
+                                               HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    </Frame>
+                                </HorizontalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Refresh Button -->
+                <Button Command="{Binding RefrescarCommand}"
+                        Text="Actualizar"
+                        BackgroundColor="#6B46C1"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        Padding="15,10"
+                        CornerRadius="8"
+                        Margin="0,10"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </VerticalStackLayout>
+</ContentPage>

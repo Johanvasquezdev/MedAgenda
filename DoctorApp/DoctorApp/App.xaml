@@ -1,0 +1,41 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:DoctorApp"
+             xmlns:converters="clr-namespace:DoctorApp.Converters"
+             x:Class="DoctorApp.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Color Theme -->
+            <Color x:Key="PrimaryColor">#6B46C1</Color>
+            <Color x:Key="SecondaryColor">#1F2937</Color>
+            <Color x:Key="AccentColor">#A78BFA</Color>
+            <Color x:Key="SuccessColor">#10B981</Color>
+            <Color x:Key="WarningColor">#F59E0B</Color>
+            <Color x:Key="ErrorColor">#EF4444</Color>
+            <Color x:Key="BackgroundColor">#F5F7FA</Color>
+            <Color x:Key="TextColor">#1F2937</Color>
+            <Color x:Key="TextSecondary">#6B7280</Color>
+
+            <!-- Converters -->
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <converters:BoolToTextoConverter x:Key="BoolToTextoConverter" />
+            <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
+            <converters:EstadoColorConverter x:Key="EstadoColorConverter" />
+            <converters:EstadoTextoConverter x:Key="EstadoTextoConverter" />
+            <converters:EstadoCitaColorConverter x:Key="EstadoCitaColorConverter" />
+            <converters:EstadoCitaTextoConverter x:Key="EstadoCitaTextoConverter" />
+            <converters:NullToBoolConverter x:Key="NullToBoolConverter" />
+            <converters:IntToNegativeBoolConverter x:Key="IntToNegativeBoolConverter" />
+            <converters:SelectionColorConverter x:Key="SelectionColorConverter" />
+            <converters:EqualsConverter x:Key="EqualsConverter" />
+            <converters:PuedoConfirmarConverter x:Key="PuedoConfirmarConverter" />
+            <converters:PuedoIniciarConverter x:Key="PuedoIniciarConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

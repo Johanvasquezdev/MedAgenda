@@ -1,0 +1,28 @@
+services:
+  sgc-api:
+    build:
+      context: .
+      dockerfile: SGC.API/Dockerfile
+    image: sgc-api:local
+    container_name: sgc-api
+    ports:
+      - "5189:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ConnectionStrings__SGCConnection: "${SGC_DB_CONNECTION}"
+      ConnectionStrings__Redis: "${SGC_REDIS_CONNECTION}"
+      Jwt__Key: "${SGC_JWT_KEY}"
+      Jwt__Issuer: "${SGC_JWT_ISSUER:-SGC.API}"
+      Jwt__Audience: "${SGC_JWT_AUDIENCE:-SGC.Clients}"
+      Jwt__ExpireMinutes: "${SGC_JWT_EXPIRE_MINUTES:-60}"
+      Cors__AllowedOrigins__0: "${SGC_CORS_ORIGIN_0}"
+      Cors__AllowedOrigins__1: "${SGC_CORS_ORIGIN_1}"
+      Stripe__PublicKey: "${SGC_STRIPE_PUBLIC_KEY}"
+      Stripe__SecretKey: "${SGC_STRIPE_SECRET_KEY}"
+      Stripe__WebhookSecret: "${SGC_STRIPE_WEBHOOK_SECRET}"
+      AI__Provider: "${SGC_AI_PROVIDER:-Groq}"
+      AI__BaseUrl: "${SGC_AI_BASE_URL:-https://api.groq.com/openai/v1}"
+      AI__Model: "${SGC_AI_MODEL:-llama-3.1-8b-instant}"
+      AI__ApiKey: "${SGC_AI_API_KEY}"
+      AI__MaxTokens: "${SGC_AI_MAX_TOKENS:-1000}"
+      AI__Temperature: "${SGC_AI_TEMPERATURE:-0.2}"

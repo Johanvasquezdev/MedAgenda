@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="DoctorApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:DoctorApp"
+    xmlns:views="clr-namespace:DoctorApp.Views"
+    Title="SGCM"
+    Shell.FlyoutBehavior="Locked"
+    FlyoutBackgroundColor="White"
+    FlyoutWidth="250"
+    BackgroundColor="#F5F7FA">
+
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Color x:Key="PrimaryColor">#6B46C1</Color>
+            <Color x:Key="SecondaryColor">#1F2937</Color>
+            <Color x:Key="TextColor">#FFFFFF</Color>
+            <Color x:Key="BackgroundColor">#F5F7FA</Color>
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <Shell.FlyoutHeader>
+        <StackLayout Padding="20" BackgroundColor="#F8F9FA">
+            <Image Source="logo_medag.png" 
+                   HeightRequest="100" 
+                   HorizontalOptions="Center" />
+            <Label Text="MEDAG" 
+                   FontSize="22" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" 
+                   TextColor="#6B46C1"/>
+            <Label Text="Gestión Médica" 
+                   FontSize="12" 
+                   HorizontalOptions="Center" 
+                   TextColor="Gray"/>
+        </StackLayout>
+    </Shell.FlyoutHeader>
+
+    <TabBar>
+        <ShellContent 
+            Title="Dashboard" 
+            ContentTemplate="{DataTemplate views:DashboardPage}"
+            Route="DashboardPage" />
+
+        <ShellContent 
+            Title="Consultas" 
+            ContentTemplate="{DataTemplate views:PanelConsultasDelDiaPage}"
+            Route="PanelConsultasDelDiaPage" />
+
+        <ShellContent 
+            Title="Disponibilidad" 
+            ContentTemplate="{DataTemplate views:GestionDisponibilidadPage}"
+            Route="GestionDisponibilidadPage" />
+
+        <ShellContent 
+            Title="Mis Citas" 
+            ContentTemplate="{DataTemplate views:GestionCitasPage}"
+            Route="GestionCitasPage" />
+    </TabBar>
+
+</Shell>

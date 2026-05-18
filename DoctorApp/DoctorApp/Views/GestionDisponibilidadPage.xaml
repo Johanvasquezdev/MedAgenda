@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="DoctorApp.Views.GestionDisponibilidadPage"
+             Title="Gestión de Disponibilidad"
+             BackgroundColor="#F5F7FA">
+
+    <VerticalStackLayout Padding="0" Spacing="0">
+
+        <!-- Header -->
+        <Frame CornerRadius="0" Padding="20" HasShadow="False" BackgroundColor="#6B46C1" Margin="0">
+            <VerticalStackLayout Spacing="8">
+                <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                    <Label Text="📅" FontSize="28"/>
+                    <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="FillAndExpand">
+                        <Label Text="Gestión de Disponibilidad" FontSize="18" FontAttributes="Bold" TextColor="White"/>
+                        <Label Text="{Binding MedicoActual.NombreCompleto}" FontSize="12" TextColor="#E9D5FF"/>
+                    </VerticalStackLayout>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Contenido -->
+        <ScrollView>
+            <VerticalStackLayout Padding="20" Spacing="15">
+
+                <!-- Mensaje de Confirmación -->
+                <Frame CornerRadius="12" Padding="15" HasShadow="True" BackgroundColor="White" IsVisible="{Binding MensajeConfirmacion, Converter={StaticResource StringToBoolConverter}}">
+                    <Label Text="{Binding MensajeConfirmacion}" FontSize="12" TextColor="#10B981" FontAttributes="Bold"/>
+                </Frame>
+
+                <!-- Panel de Control -->
+                <Frame CornerRadius="12" Padding="15" HasShadow="True" BackgroundColor="White">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="Configurar Horarios" FontSize="14" FontAttributes="Bold" TextColor="#1F2937"/>
+
+                        <!-- Selector de Día -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Día" FontSize="12" FontAttributes="Bold" TextColor="#6B7280"/>
+                            <Picker ItemsSource="{Binding DiasDisponibles}" 
+                                   SelectedItem="{Binding DiaSeleccionado}"
+                                   BackgroundColor="#F3F4F6"
+                                   TextColor="#1F2937"/>
+                        </VerticalStackLayout>
+
+                        <!-- Hora Inicio -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Hora Inicio" FontSize="12" FontAttributes="Bold" TextColor="#6B7280"/>
+                            <TimePicker Time="{Binding HoraInicio}"
+                                       BackgroundColor="#F3F4F6"
+                                       TextColor="#1F2937"/>
+                        </VerticalStackLayout>
+
+                        <!-- Hora Fin -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Hora Fin" FontSize="12" FontAttributes="Bold" TextColor="#6B7280"/>
+                            <TimePicker Time="{Binding HoraFin}"
+                                       BackgroundColor="#F3F4F6"
+                                       TextColor="#1F2937"/>
+                        </VerticalStackLayout>
+
+                        <!-- Duración -->
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="{Binding DuracionConsulta, StringFormat='Duración: {0} minutos'}" FontSize="12" FontAttributes="Bold" TextColor="#6B7280"/>
+                            <Slider Minimum="15" Maximum="120" Value="{Binding DuracionConsulta}" BackgroundColor="#F3F4F6"/>
+                        </VerticalStackLayout>
+
+                        <!-- Switch Disponible -->
+                        <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                            <Label Text="Disponible" FontSize="12" FontAttributes="Bold" TextColor="#6B7280" HorizontalOptions="FillAndExpand"/>
+                            <Switch IsToggled="{Binding Disponible}" BackgroundColor="#F3F4F6"/>
+                        </HorizontalStackLayout>
+
+                        <!-- Botones de Acción -->
+                        <HorizontalStackLayout Spacing="8">
+                            <Button Command="{Binding AgregarHorarioCommand}"
+                                   Text="➕ Agregar"
+                                   BackgroundColor="#10B981"
+                                   TextColor="White"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   CornerRadius="6"
+                                   HorizontalOptions="FillAndExpand"/>
+
+                            <Button Command="{Binding GenerarHorariosCommand}"
+                                   Text="🔄 Generar Semana"
+                                   BackgroundColor="#3B82F6"
+                                   TextColor="White"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   CornerRadius="6"
+                                   HorizontalOptions="FillAndExpand"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Título -->
+                <Label Text="Horarios Disponibles" FontSize="16" FontAttributes="Bold" TextColor="#1F2937"/>
+
+                <!-- Grid de Horarios -->
+                <CollectionView ItemsSource="{Binding HorariosDisponibles}"
+                               SelectionMode="Single"
+                               SelectedItem="{Binding HorarioSeleccionado}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" 
+                                        Span="4" 
+                                        HorizontalItemSpacing="10" 
+                                        VerticalItemSpacing="10" />
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame CornerRadius="12" Padding="12" HasShadow="True" 
+                                   BackgroundColor="{Binding EstaDisponible, Converter={StaticResource BoolToColorConverter}}">
+
+                                <VerticalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Label Text="{Binding Hora}" 
+                                           FontSize="18" 
+                                           FontAttributes="Bold" 
+                                           TextColor="White"
+                                           HorizontalOptions="Center"/>
+
+                                    <Label Text="{Binding Dia}" 
+                                           FontSize="11" 
+                                           TextColor="#E0E7FF"
+                                           HorizontalOptions="Center"/>
+
+                                    <Label Text="{Binding DuracionMinutos, StringFormat='{0}min'}" 
+                                           FontSize="10" 
+                                           TextColor="#C7D2FE"
+                                           HorizontalOptions="Center"/>
+
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <VisualState x:Name="Normal" />
+                                            <VisualState x:Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="Scale" Value="1.05" />
+                                                    <Setter Property="Opacity" Value="0.8" />
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Panel de Edición (si está seleccionado) -->
+                <Frame CornerRadius="12" Padding="15" HasShadow="True" BackgroundColor="White" 
+                       IsVisible="{Binding HorarioSeleccionado, Converter={StaticResource NullToBoolConverter}}">
+                    <VerticalStackLayout Spacing="12">
+                        <Label Text="Editar Horario" FontSize="14" FontAttributes="Bold" TextColor="#1F2937"/>
+
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="{Binding HorarioSeleccionado.Hora}" 
+                                   FontSize="16" 
+                                   FontAttributes="Bold" 
+                                   TextColor="#6B46C1"
+                                   HorizontalOptions="FillAndExpand"/>
+                            <Label Text="{Binding HorarioSeleccionado.Dia}" 
+                                   FontSize="12" 
+                                   TextColor="#6B7280"/>
+                        </HorizontalStackLayout>
+
+                        <BoxView HeightRequest="1" BackgroundColor="#E5E7EB"/>
+
+                        <HorizontalStackLayout Spacing="8">
+                            <Button Command="{Binding ActualizarHorarioCommand}"
+                                   Text="✏️ Actualizar"
+                                   BackgroundColor="#3B82F6"
+                                   TextColor="White"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   CornerRadius="6"
+                                   HorizontalOptions="FillAndExpand"/>
+
+                            <Button Command="{Binding EliminarHorarioCommand}"
+                                   Text="🗑️ Eliminar"
+                                   BackgroundColor="#EF4444"
+                                   TextColor="White"
+                                   FontSize="11"
+                                   FontAttributes="Bold"
+                                   CornerRadius="6"
+                                   HorizontalOptions="FillAndExpand"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Mensaje vacío -->
+                <Label Text="No hay horarios disponibles" 
+                       FontSize="13" 
+                       TextColor="#9CA3AF" 
+                       HorizontalOptions="Center" 
+                       VerticalOptions="CenterAndExpand"
+                       IsVisible="{Binding HorariosDisponibles.Count, Converter={StaticResource IntToNegativeBoolConverter}}"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </VerticalStackLayout>
+
+</ContentPage>
