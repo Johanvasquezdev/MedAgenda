@@ -38,7 +38,7 @@ export class AuthService {
         id: userId,
         nombre: response.data.nombreUsuario || payload?.unique_name || '',
         rol: response.data.rol || payload?.role || '',
-        email: payload?.email,
+        email: payload?.email || credenciales.email,
       };
 
       localStorage.setItem('medagenda_token', response.data.token);

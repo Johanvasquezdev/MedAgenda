@@ -3,6 +3,7 @@
 import { UserSettingsForm } from "@/components/settings/UserSettingsForm";
 import { Settings, Shield, User, Globe, MessageSquare } from "lucide-react";
 import { usePageTransition, AnimatedCard } from "@/components/animations/Animatedcomponents";
+import Link from "next/link";
 
 export default function PacienteSettingsPage() {
   usePageTransition();
@@ -67,20 +68,6 @@ export default function PacienteSettingsPage() {
             </div>
           </AnimatedCard>
 
-          <AnimatedCard delay={400} className="p-6 bg-gradient-to-br from-emerald-500/10 via-card to-card border border-border rounded-3xl shadow-sm">
-            <div className="flex items-center gap-3 mb-4">
-               <div className="p-2 bg-emerald-500/10 rounded-xl">
-                 <MessageSquare className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-               </div>
-               <h3 className="font-black text-foreground uppercase tracking-tight text-sm">Soporte IA</h3>
-            </div>
-            <p className="text-xs text-muted-foreground font-medium mb-4">
-              ¿Necesitas ayuda con tu perfil? Pregúntale a nuestro asistente inteligente.
-            </p>
-            <button className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all active:scale-95 shadow-lg shadow-emerald-500/20">
-              Ir al Asistente
-            </button>
-          </AnimatedCard>
         </div>
       </div>
     </div>

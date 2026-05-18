@@ -6,6 +6,8 @@ using Serilog;
 using SGC.API.Middleware;
 using SGC.IOC;
 using SGC.Infraestructure.SignalR.Hubs;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,6 +50,22 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key)
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+
+            if (!string.IsNullOrEmpty(accessToken) &&
+                (path.StartsWithSegments("/citahub") || path.StartsWithSegments("/disponibilidadhub")))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -138,6 +156,42 @@ builder.Services.AddSwaggerGen(options =>
 // ============================================================
 // 5. Health Checks
 // ============================================================
+// ============================================================
+// 4.5. Rate Limiting (Idempotencia y Anti-Abuso)
+// ============================================================
+builder.Services.AddRateLimiter(options =>
+{
+    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: httpContext.Connection.RemoteIpAddress?.ToString() ?? httpContext.Request.Headers.Host.ToString(),
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                AutoReplenishment = true,
+                PermitLimit = 100,
+                QueueLimit = 0,
+                Window = TimeSpan.FromMinutes(1)
+            }));
+
+    options.AddFixedWindowLimiter("strict", fixedWindowOptions =>
+    {
+        fixedWindowOptions.AutoReplenishment = true;
+        fixedWindowOptions.PermitLimit = 5;
+        fixedWindowOptions.QueueLimit = 0;
+        fixedWindowOptions.Window = TimeSpan.FromSeconds(10);
+    });
+
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsJsonAsync(new
+        {
+            statusCode = 429,
+            mensaje = "Demasiadas peticiones. Por favor, intenta de nuevo más tarde."
+        }, token);
+    };
+});
+
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();
@@ -162,6 +216,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 app.UseCors("SGCPolicy");
+app.UseRateLimiter();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
@@ -183,3 +238,4 @@ app.Lifetime.ApplicationStarted.Register(() =>
 });
 
 app.Run();
+

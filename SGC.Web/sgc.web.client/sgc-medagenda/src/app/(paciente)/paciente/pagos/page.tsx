@@ -9,6 +9,8 @@ import { PagoResponse } from "@/types/api.types";
 import { PagoService } from "@/services/pago.service";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { usePageTransition } from "@/components/animations/Animatedcomponents";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const filters = ["Todos", "Pagados", "Pendientes"];
 
@@ -50,6 +52,59 @@ export default function PagosPage() {
   });
 
   usePageTransition();
+
+  const handleGenerateInvoice = (pago: PagoResponse, action: "view" | "download") => {
+    const doc = new jsPDF();
+
+    // Header
+    doc.setFontSize(22);
+    doc.setTextColor(16, 185, 129); // emerald-500
+    doc.text("MedAgenda", 14, 20);
+
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Factura Comercial", 14, 28);
+
+    // Invoice details
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`ID Transacción: #${pago.id}`, 14, 45);
+    doc.text(`Fecha de Emisión: ${dayjs(pago.fechaCreacion).format("DD MMM YYYY")}`, 14, 52);
+    doc.text(`Estado: ${pago.estado}`, 14, 59);
+
+    if (pago.stripePaymentIntentId) {
+      doc.text(`Referencia de Pago: ${pago.stripePaymentIntentId}`, 14, 66);
+    }
+
+    // Table
+    autoTable(doc, {
+      startY: 80,
+      head: [["Descripción", "Moneda", "Monto"]],
+      body: [[`Pago de Cita Médica #${pago.citaId}`, pago.moneda, pago.monto.toLocaleString()]],
+      theme: "grid",
+      headStyles: { fillColor: [16, 185, 129] },
+    });
+
+    const finalY = (doc as any).lastAutoTable.finalY || 80;
+
+    // Total
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "bold");
+    doc.text(`Total a Pagar: ${pago.moneda} ${pago.monto.toLocaleString()}`, 14, finalY + 20);
+
+    // Footer
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(150, 150, 150);
+    doc.text("Gracias por confiar en MedAgenda.", 14, finalY + 40);
+
+    if (action === "download") {
+      doc.save(`Factura_MedAgenda_${pago.id}.pdf`);
+      toast.success("Factura descargada exitosamente");
+    } else {
+      window.open(doc.output("bloburl"), "_blank");
+    }
+  };
 
   return (
     <div className="space-y-8 page-content animate-in fade-in duration-500">
@@ -97,7 +152,7 @@ export default function PagosPage() {
       <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead>
+            <thead className="whitespace-nowrap">
               <tr className="border-b border-border bg-muted/30">
                 <th className="text-left text-muted-foreground text-xs font-black uppercase tracking-widest px-6 py-4">ID Transacción</th>
                 <th className="text-left text-muted-foreground text-xs font-black uppercase tracking-widest px-6 py-4">Fecha</th>
@@ -120,7 +175,7 @@ export default function PagosPage() {
                 </tr>
               ) : (
                 filtered.map(pago => (
-                  <tr key={pago.id} className="border-b border-border hover:bg-muted/30 transition-colors group">
+                  <tr key={pago.id} className="border-b border-border hover:bg-muted/30 transition-colors group whitespace-nowrap">
                     <td className="px-6 py-4 text-foreground font-mono text-xs font-bold">#{pago.id}</td>
                     <td className="px-6 py-4 text-muted-foreground font-medium text-sm">{dayjs(pago.fechaCreacion).format("DD MMM YYYY")}</td>
                     <td className="px-6 py-4 text-foreground font-black">{pago.moneda} {pago.monto.toLocaleString()}</td>
@@ -145,10 +200,18 @@ export default function PagosPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <button className="w-9 h-9 rounded-xl bg-muted/50 hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-all border border-border">
+                        <button 
+                          onClick={() => handleGenerateInvoice(pago, "view")}
+                          className="w-9 h-9 rounded-xl bg-muted/50 hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-all border border-border"
+                          title="Ver Factura"
+                        >
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button className="w-9 h-9 rounded-xl bg-muted/50 hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-all border border-border">
+                        <button 
+                          onClick={() => handleGenerateInvoice(pago, "download")}
+                          className="w-9 h-9 rounded-xl bg-muted/50 hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-all border border-border"
+                          title="Descargar Factura"
+                        >
                           <Download className="w-4 h-4" />
                         </button>
                         {pago.estado === "Completado" && (

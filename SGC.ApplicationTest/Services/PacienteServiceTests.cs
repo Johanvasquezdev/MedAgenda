@@ -1,4 +1,5 @@
 using Moq;
+using SGC.Domain.Interfaces;
 using SGC.Application.DTOs.Medical;
 using SGC.Application.Services;
 using SGC.Domain.Entities.Medical;
@@ -24,6 +25,7 @@ namespace SGC.ApplicationTest.Services
             _pacienteService = new PacienteService(
                 _pacienteRepoMock.Object,
                 new PacienteValidator(),
+                new Mock<IEmailService>().Object,
                 _loggerMock.Object);
         }
 

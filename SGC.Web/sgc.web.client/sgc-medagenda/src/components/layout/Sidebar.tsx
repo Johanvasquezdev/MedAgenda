@@ -19,7 +19,6 @@ export function Sidebar() {
     { label: "Mis Citas", href: "/paciente/citas", icon: Calendar },
     { label: "Pagos y Facturación", href: "/paciente/pagos", icon: CreditCard },
     { label: "Notificaciones", href: "/paciente/notificaciones", icon: Bell },
-    { label: "Asistente IA", href: "/paciente/chatbot", icon: MessageSquare },
     { label: "Configuración", href: "/paciente/settings", icon: Settings },
   ];
 

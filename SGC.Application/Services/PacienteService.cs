@@ -5,6 +5,7 @@ using SGC.Application.Mappers;
 using SGC.Application.Services.Base;
 using SGC.Domain.Entities.Medical;
 using SGC.Domain.Enums;
+using SGC.Domain.Interfaces;
 using SGC.Domain.Interfaces.ILogger;
 using SGC.Domain.Interfaces.Repository;
 using SGC.Domain.Validators;
@@ -18,14 +19,17 @@ namespace SGC.Application.Services
     {
         private readonly IPacienteRepository _pacienteRepository;
         private readonly PacienteValidator _validator;
+        private readonly IEmailService _emailService;
 
         public PacienteService(
             IPacienteRepository pacienteRepository,
             PacienteValidator validator,
+            IEmailService emailService,
             ISGCLogger logger) : base(logger)
         {
             _pacienteRepository = pacienteRepository;
             _validator = validator;
+            _emailService = emailService;
         }
 
         // Crea un nuevo paciente, validando los datos y aplicando la logica de negocio antes de guardarlo en el repositorio.
@@ -50,6 +54,14 @@ namespace SGC.Application.Services
 
                     _validator.Validar(paciente);
                     await _pacienteRepository.AddAsync(paciente);
+
+                    // Enviar email de bienvenida via Brevo (fire-and-forget, no bloquea el registro)
+                    _ = Task.Run(async () =>
+                    {
+                        try { await _emailService.EnviarBienvenidaAsync(paciente.Email, paciente.Nombre); }
+                        catch { /* No bloquear el registro si el email falla */ }
+                    });
+
                     return PacienteMapper.ToResponse(paciente);
                 },
                 $"Email: {request.Email}");

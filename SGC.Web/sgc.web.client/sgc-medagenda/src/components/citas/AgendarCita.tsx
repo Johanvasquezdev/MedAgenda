@@ -13,6 +13,14 @@ import { UsuarioService } from "@/services/usuario.service";
 import { DisponibilidadService } from "@/services/disponibilidad.service";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface Props {
   medico: MedicoDTO | null;
@@ -104,24 +112,26 @@ export function AgendarCitaModal({ medico, isOpen, onClose }: Props) {
     }
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (!open) onClose();
+  };
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-      <div className="bg-slate-950/95 rounded-2xl shadow-xl w-full max-w-md border border-slate-800 overflow-hidden">
-        <div className="flex justify-between items-center p-4 border-b border-slate-800 bg-slate-950/90">
-          <h2 className="text-lg font-semibold text-white">Agendar con {medico.nombre}</h2>
-          <button type="button" onClick={onClose} aria-label="Cerrar modal" className="text-slate-400 hover:text-white transition-colors">
-            <X aria-hidden="true" className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="p-6 text-slate-100">
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogContent className="sm:max-w-md border-border bg-card text-foreground">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-bold">Agendar con {medico.nombre}</DialogTitle>
+        </DialogHeader>
+
+        <div className="py-2">
           {isSuccess ? (
-            <div className="text-center py-8">
+            <div className="text-center py-6">
               <CheckCircle2 className="w-16 h-16 text-emerald-500 mx-auto" />
-              <h3 className="text-lg font-semibold text-white">Cita Agendada</h3>
-              <p className="text-slate-400 text-sm mt-2">
+              <h3 className="text-lg font-semibold text-foreground mt-4">Cita Agendada</h3>
+              <p className="text-muted-foreground text-sm mt-2">
                 Puedes completar el pago de tu consulta ahora de forma segura.
               </p>
-              <div className="mt-6 flex flex-col gap-3">
+              <div className="mt-8 flex flex-col gap-3">
                 <button
                   disabled={pagoLoading || pagoCreado || !citaCreadaId || !pacienteActualId}
                   onClick={async () => {
@@ -145,7 +155,7 @@ export function AgendarCitaModal({ medico, isOpen, onClose }: Props) {
                       setPagoLoading(false);
                     }
                   }}
-                  className="w-full bg-emerald-600 text-white py-3 rounded-xl hover:bg-emerald-500 transition-colors disabled:opacity-60 flex justify-center"
+                  className="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-500 transition-colors disabled:opacity-60 flex justify-center"
                 >
                   {pagoLoading ? "Procesando..." : "Completar Pago Seguro"}
                 </button>
@@ -154,7 +164,7 @@ export function AgendarCitaModal({ medico, isOpen, onClose }: Props) {
                     onClose();
                     router.push("/paciente/pagos");
                   }}
-                  className="w-full bg-slate-800 text-slate-200 py-3 rounded-xl hover:bg-slate-700 transition-colors"
+                  className="w-full bg-muted text-foreground py-3 font-semibold rounded-xl hover:bg-secondary border border-border transition-colors"
                 >
                   Ver mis pagos
                 </button>
@@ -162,49 +172,52 @@ export function AgendarCitaModal({ medico, isOpen, onClose }: Props) {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                id={fechaHoraId}
-                aria-label="Fecha y hora"
-                type="datetime-local"
-                required
-                className="w-full px-4 py-2 border border-slate-800 bg-slate-950/70 text-slate-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                value={fechaHora}
-                onChange={(e) => setFechaHora(e.target.value)}
-              />
-              <input
-                id={motivoId}
-                aria-label="Motivo de la cita"
-                type="text"
-                required
-                placeholder="Motivo..."
-                className="w-full px-4 py-2 border border-slate-800 bg-slate-950/70 text-slate-100 rounded-xl placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                value={motivo}
-                onChange={(e) => setMotivo(e.target.value)}
-              />
-              <textarea
-                id={notasId}
-                aria-label="Notas adicionales"
-                placeholder="Notas..."
-                className="w-full px-4 py-2 border border-slate-800 bg-slate-950/70 text-slate-100 rounded-xl placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                value={notas}
-                onChange={(e) => setNotas(e.target.value)}
-              />
-              {error && <div role="alert" aria-live="polite" className="text-red-500 text-sm">{error}</div>}
+              <div className="space-y-2">
+                <Label htmlFor={fechaHoraId}>Fecha y Hora</Label>
+                <Input
+                  id={fechaHoraId}
+                  type="datetime-local"
+                  required
+                  value={fechaHora}
+                  onChange={(e) => setFechaHora(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor={motivoId}>Motivo de la Cita</Label>
+                <Input
+                  id={motivoId}
+                  required
+                  placeholder="Ej. Chequeo general, Dolor de cabeza..."
+                  value={motivo}
+                  onChange={(e) => setMotivo(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor={notasId}>Notas Adicionales (Opcional)</Label>
+                <textarea
+                  id={notasId}
+                  rows={3}
+                  placeholder="Información relevante para el médico..."
+                  className="w-full px-3 py-2 text-sm border border-input bg-background rounded-md shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  value={notas}
+                  onChange={(e) => setNotas(e.target.value)}
+                />
+              </div>
+
+              {error && <div className="text-destructive font-medium text-sm">{error}</div>}
+              
               <button
                 disabled={isLoading}
-                className="w-full bg-emerald-600 text-white py-3 rounded-xl flex justify-center hover:bg-emerald-500 transition-colors"
+                className="w-full mt-4 bg-emerald-600 text-white py-2.5 rounded-xl font-bold flex justify-center hover:bg-emerald-500 transition-colors disabled:opacity-70"
               >
-                {isLoading ? (
-                  <Loader2 className="animate-spin" />
-                ) : (
-                  "Confirmar Cita"
-                )}
+                {isLoading ? <Loader2 className="animate-spin w-5 h-5" /> : "Confirmar Cita"}
               </button>
             </form>
           )}
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
-

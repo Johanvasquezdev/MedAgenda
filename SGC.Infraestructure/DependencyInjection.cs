@@ -48,14 +48,28 @@ namespace SGC.Infraestructure
             var resolvedRedisConnection = BuildRedisConnectionString(redisConnection, redisToken);
             if (!string.IsNullOrWhiteSpace(resolvedRedisConnection))
             {
-                services.AddSingleton<IConnectionMultiplexer>(_ =>
-                    ConnectionMultiplexer.Connect(resolvedRedisConnection));
-                services.AddScoped<ICacheService, RedisCacheService>();
+                try
+                {
+                    // Intentar conectar sincrónicamente con un timeout corto para desarrollo
+                    var options = ConfigurationOptions.Parse(resolvedRedisConnection);
+                    options.ConnectTimeout = 3000; // 3 segundos max
+                    options.SyncTimeout = 3000;
+                    
+                    var multiplexer = ConnectionMultiplexer.Connect(options);
+                    services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+                    services.AddScoped<ICacheService, RedisCacheService>();
+                    Console.WriteLine("[INFO] Conectado exitosamente a Redis Cache.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[WARN] Error al conectar a Redis: {ex.Message}. Se usará caché en memoria (InMemoryCacheService) como fallback.");
+                    services.AddScoped<ICacheService, InMemoryCacheService>();
+                }
             }
             else if (isDevelopment)
             {
-                Console.WriteLine("[WARN] Redis no configurado correctamente. Se usará caché en memoria (NoOp) en Development.");
-                services.AddScoped<ICacheService, NoOpCacheService>();
+                Console.WriteLine("[WARN] Redis no configurado. Se usará caché en memoria (InMemoryCacheService) en Development.");
+                services.AddScoped<ICacheService, InMemoryCacheService>();
             }
             else
             {

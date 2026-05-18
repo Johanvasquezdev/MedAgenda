@@ -1,3 +1,4 @@
+using SGC.Domain.Interfaces;
 using Moq;
 using SGC.Application.DTOs.Appointments;
 using SGC.Application.Services;
@@ -19,21 +20,27 @@ namespace SGC.ApplicationTest.Services
         private readonly Mock<ICitaRepository> _citaRepoMock;
         private readonly Mock<IMedicoRepository> _medicoRepoMock;
         private readonly Mock<INotificacionRepository> _notificacionRepoMock;
+        private readonly Mock<IPacienteRepository> _pacienteRepoMock;
+        private readonly Mock<IEmailService> _emailServiceMock;
         private readonly CitaDomainService _domainService;
         private readonly Mock<ISGCLogger> _loggerMock;
         private readonly CitaService _citaService;
 
-        public CitaServiceTests()
+                public CitaServiceTests()
         {
             _citaRepoMock = new Mock<ICitaRepository>();
             _medicoRepoMock = new Mock<IMedicoRepository>();
             _notificacionRepoMock = new Mock<INotificacionRepository>();
+            _pacienteRepoMock = new Mock<IPacienteRepository>();
+            _emailServiceMock = new Mock<IEmailService>();
             _loggerMock = new Mock<ISGCLogger>();
             _domainService = new CitaDomainService();
             _citaService = new CitaService(
                 _citaRepoMock.Object,
                 _medicoRepoMock.Object,
                 _notificacionRepoMock.Object,
+                _pacienteRepoMock.Object,
+                _emailServiceMock.Object,
                 _domainService,
                 _loggerMock.Object);
         }

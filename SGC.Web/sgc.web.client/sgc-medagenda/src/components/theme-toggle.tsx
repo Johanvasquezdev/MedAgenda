@@ -15,7 +15,7 @@ export function ThemeToggle() {
   const isDark = resolvedTheme !== "light";
 
   const baseClassName =
-    "rounded-xl border border-white/10 bg-white/5 p-2 text-white/70 transition-all duration-200 hover:bg-white/10 hover:text-white";
+    "rounded-xl border border-border bg-secondary p-2 text-muted-foreground transition-all duration-200 hover:bg-secondary/80 hover:text-foreground";
 
   if (!mounted) {
     return (

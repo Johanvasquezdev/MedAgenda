@@ -5,6 +5,7 @@ using SGC.Application.Services.Base;
 using SGC.Domain.Entities.Appointments;
 using SGC.Domain.Entities.Notifications;
 using SGC.Domain.Enums;
+using SGC.Domain.Interfaces;
 using SGC.Domain.Interfaces.ILogger;
 using SGC.Domain.Interfaces.Repository;
 using SGC.Domain.Services;
@@ -14,31 +15,29 @@ namespace SGC.Application.Services
     // Servicio para gestionar el ciclo de vida de las citas medicas
     public class CitaService : BaseService, ICitaService
     {
-        // Repositorio de citas para acceso a datos
         private readonly ICitaRepository _citaRepository;
-
-        // Repositorio de medicos para validar disponibilidad
         private readonly IMedicoRepository _medicoRepository;
-
-        // Servicio de dominio para validar reglas de negocio
         private readonly CitaDomainService _domainService;
-
-        // Repositorio de notificaciones para informar al paciente sobre cambios de estado
         private readonly INotificacionRepository _notificacionRepository;
+        private readonly IPacienteRepository _pacienteRepository;
+        private readonly IEmailService _emailService;
 
         public CitaService(
             ICitaRepository citaRepository,
             IMedicoRepository medicoRepository,
             INotificacionRepository notificacionRepository,
+            IPacienteRepository pacienteRepository,
+            IEmailService emailService,
             CitaDomainService domainService,
             ISGCLogger logger) : base(logger)
         {
             _citaRepository = citaRepository;
             _medicoRepository = medicoRepository;
             _notificacionRepository = notificacionRepository;
+            _pacienteRepository = pacienteRepository;
+            _emailService = emailService;
             _domainService = domainService;
         }
-
         // Agenda una nueva cita validando disponibilidad y conflictos de horario
         public async Task<CitaResponse> AgendarAsync(CrearCitaRequest request)
         {
@@ -213,8 +212,24 @@ namespace SGC.Application.Services
                             "Ya existe una cita en ese horario.");
                     }
 
+                    var fechaAnterior = cita.FechaHora;
                     cita.Reprogramar(nuevaFecha);
                     await _citaRepository.UpdateAsync(cita);
+
+                    // Notificar al paciente del cambio de horario via email (fire-and-forget)
+                    _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            var paciente = await _pacienteRepository.GetByIdAsync(cita.PacienteId);
+                            var medico = await _medicoRepository.GetByIdAsync(cita.MedicoId);
+                            await _emailService.EnviarCambioHorarioAsync(
+                                paciente.Email, paciente.Nombre,
+                                medico?.Nombre ?? "Tu médico",
+                                fechaAnterior, nuevaFecha);
+                        }
+                        catch { /* No bloquear si el email falla */ }
+                    });
                 },
                 $"CitaId: {citaId}, NuevaFecha: {nuevaFecha:O}");
         }

@@ -19,8 +19,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${geist.className} antialiased`} suppressHydrationWarning>
-        <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem={false} suppressHydrationWarning>
+      <body className={`${geist.className} antialiased overflow-x-hidden`} suppressHydrationWarning>
+        <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <AuthProvider>
             {children}
             <Toaster richColors position="top-right" />

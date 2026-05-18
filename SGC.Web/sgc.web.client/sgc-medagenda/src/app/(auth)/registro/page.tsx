@@ -6,7 +6,8 @@ import { ThreeBackground } from "@/components/animations/Threebackground";
 import anime from "animejs";
 import {
   Loader2, Mail, Lock, User, Phone, Calendar,
-  CreditCard, FileText, Eye, EyeOff, ArrowRight
+  CreditCard, FileText, Eye, EyeOff, ArrowRight,
+  Hospital, Sparkles, Stethoscope, HeartPulse, AlertTriangle
 } from "lucide-react";
 import { toast } from "sonner";
 import { PacienteService } from "@/services/paciente.service";
@@ -165,7 +166,7 @@ export default function RegistroPage() {
                             border border-white/20 shadow-2xl
                             shadow-emerald-500/20"
             >
-              <span className="text-5xl">🏥</span>
+              <Hospital className="w-12 h-12 text-white" />
             </div>
             <h1 className="text-5xl font-bold text-white mb-2 tracking-tight">
               MedAgenda
@@ -177,10 +178,10 @@ export default function RegistroPage() {
 
           <div className="space-y-4 w-full max-w-xs">
             {[
-              { icon: "✨", text: "Acceso inmediato al portal" },
-              { icon: "📅", text: "Gestión unificada de citas" },
-              { icon: "⚕️", text: "Directorio de especialistas" },
-              { icon: "📊", text: "Historial médico asegurado" },
+              { icon: <Sparkles className="w-6 h-6 text-white/95" />, text: "Acceso inmediato al portal" },
+              { icon: <Calendar className="w-6 h-6 text-white/95" />, text: "Gestión unificada de citas" },
+              { icon: <Stethoscope className="w-6 h-6 text-white/95" />, text: "Directorio de especialistas" },
+              { icon: <HeartPulse className="w-6 h-6 text-white/95" />, text: "Historial médico asegurado" },
             ].map((item, i) => (
               <div
                 key={i}
@@ -190,7 +191,7 @@ export default function RegistroPage() {
                            hover:bg-white/15 transition-colors duration-200"
                 style={{ opacity: 0 }}
               >
-                <span className="text-2xl">{item.icon}</span>
+                {item.icon}
                 <span className="text-white/90 font-medium">{item.text}</span>
               </div>
             ))}
@@ -201,11 +202,19 @@ export default function RegistroPage() {
       {/* ── Right Panel — Form ── */}
       <div
         className="w-full lg:w-1/2 flex items-center justify-center
-                      p-8 bg-background relative overflow-y-auto"
+                      p-8 relative overflow-y-auto
+                      bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#059669] lg:bg-none lg:bg-background"
       >
-        {/* Subtle background pattern */}
+        {/* 3D Background on mobile */}
+        <div className="absolute inset-0 lg:hidden z-0">
+          <div className="fixed inset-0 pointer-events-none">
+             <ThreeBackground />
+          </div>
+        </div>
+
+        {/* Subtle background pattern (desktop only) */}
         <div
-          className="absolute inset-0 bg-gradient-to-br from-emerald-50/50
+          className="hidden lg:block absolute inset-0 bg-gradient-to-br from-emerald-50/50
                         to-transparent dark:from-emerald-950/20 pointer-events-none"
         />
 
@@ -213,10 +222,10 @@ export default function RegistroPage() {
           {/* Mobile logo */}
           <div className="lg:hidden text-center mb-8">
             <div className="w-16 h-16 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm border border-white/20 shadow-xl shadow-emerald-500/20">
-               <span className="text-3xl">🏥</span>
+               <Hospital className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-foreground">MedAgenda</h1>
-            <p className="text-muted-foreground text-xs mt-2 max-w-[280px] mx-auto text-center">
+            <h1 className="text-3xl font-bold text-white">MedAgenda</h1>
+            <p className="text-emerald-100/80 text-xs mt-2 max-w-[280px] mx-auto text-center">
               Gestiona y organiza tus citas médicas en un solo lugar, de forma rápida, segura e inteligente.
             </p>
           </div>
@@ -253,7 +262,7 @@ export default function RegistroPage() {
                                     border border-destructive/20 text-destructive
                                     rounded-2xl p-4 text-sm mb-6"
                     >
-                        <span>⚠️</span>
+                        <AlertTriangle className="w-5 h-5 flex-shrink-0" />
                         <span>{error}</span>
                     </div>
                     )}
@@ -424,7 +433,7 @@ export default function RegistroPage() {
             )}
           </div>
           
-          <p className="text-center text-xs text-muted-foreground mt-6">
+          <p className="text-center text-xs text-white/60 lg:text-muted-foreground mt-6">
             MedAgenda · 2026
           </p>
         </div>

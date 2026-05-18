@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using SGC.Application.Contracts;
 using SGC.Application.DTOs.Medical;
 using System.Security.Claims;
@@ -61,6 +62,7 @@ namespace SGC.API.Controllers
         // POST api/pacientes - Registra un nuevo paciente
         [HttpPost]
         [AllowAnonymous]
+        [EnableRateLimiting("strict")]
         public async Task<IActionResult> Crear([FromBody] CrearPacienteRequest request)
         {
             var paciente = await _pacienteService.CrearAsync(request);

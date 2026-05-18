@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Calendar, Clock, MapPin, Loader2 } from "lucide-react";
+import { Calendar, Clock, MapPin, Loader2, X } from "lucide-react";
 import { CitaDTO, EstadoCita } from "@/types/api.types";
 import { CitaService } from "@/services/cita.service";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -9,11 +9,28 @@ import { useSignalR } from "@/hooks/useSignalR";
 import { toast } from "sonner";
 import dayjs from "dayjs";
 import { usePageTransition, AnimatedCard } from "@/components/animations/Animatedcomponents";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function MisCitasPage() {
   const { user } = useAuth();
   const [citas, setCitas] = useState<CitaDTO[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Dialog states
+  const [cancelCitaId, setCancelCitaId] = useState<number | null>(null);
+  const [motivoCancelacion, setMotivoCancelacion] = useState("");
+  const [isCanceling, setIsCanceling] = useState(false);
+
+  const [reprogramarCitaId, setReprogramarCitaId] = useState<number | null>(null);
+  const [nuevaFechaHora, setNuevaFechaHora] = useState("");
+  const [isReprogramando, setIsReprogramando] = useState(false);
 
   useSignalR({ onNuevaCita: () => toast.info("Nueva cita registrada") });
 
@@ -32,28 +49,42 @@ export default function MisCitasPage() {
     fetchCitas();
   }, [user?.id]);
 
-  const cancelar = async (id: number) => {
-    const motivo = window.prompt("Motivo de cancelación:");
-    if (!motivo) return;
+  const confirmarCancelacion = async () => {
+    if (!cancelCitaId || !motivoCancelacion) {
+      toast.error("El motivo de cancelación es obligatorio.");
+      return;
+    }
+    setIsCanceling(true);
     try {
-      await CitaService.cancelarCita(id, motivo);
-      setCitas(prev => prev.map(c => c.id === id ? { ...c, estado: EstadoCita.Cancelada } : c));
+      await CitaService.cancelarCita(cancelCitaId, motivoCancelacion);
+      setCitas(prev => prev.map(c => c.id === cancelCitaId ? { ...c, estado: EstadoCita.Cancelada } : c));
       toast.success("Cita cancelada correctamente.");
+      setCancelCitaId(null);
+      setMotivoCancelacion("");
     } catch {
       toast.error("No se pudo cancelar la cita.");
+    } finally {
+      setIsCanceling(false);
     }
   };
 
-  const reprogramar = async (id: number) => {
-    const nuevaFecha = window.prompt("Nueva fecha y hora (YYYY-MM-DD HH:mm):");
-    if (!nuevaFecha) return;
-    const iso = new Date(nuevaFecha.replace(" ", "T")).toISOString();
+  const confirmarReprogramacion = async () => {
+    if (!reprogramarCitaId || !nuevaFechaHora) {
+      toast.error("La nueva fecha es obligatoria.");
+      return;
+    }
+    setIsReprogramando(true);
+    const iso = new Date(nuevaFechaHora.replace(" ", "T")).toISOString();
     try {
-      await CitaService.reprogramarCita(id, iso);
-      setCitas(prev => prev.map(c => c.id === id ? { ...c, fechaHora: iso, estado: EstadoCita.Solicitada } : c));
+      await CitaService.reprogramarCita(reprogramarCitaId, iso);
+      setCitas(prev => prev.map(c => c.id === reprogramarCitaId ? { ...c, fechaHora: iso, estado: EstadoCita.Solicitada } : c));
       toast.success("Cita reprogramada correctamente.");
+      setReprogramarCitaId(null);
+      setNuevaFechaHora("");
     } catch {
       toast.error("No se pudo reprogramar la cita.");
+    } finally {
+      setIsReprogramando(false);
     }
   };
 
@@ -138,13 +169,13 @@ export default function MisCitasPage() {
                   {(cita.estado === EstadoCita.Confirmada || cita.estado === EstadoCita.Solicitada) && (
                     <div className="flex gap-2">
                       <button
-                        onClick={() => reprogramar(cita.id)}
+                        onClick={() => setReprogramarCitaId(cita.id)}
                         className="px-5 py-2.5 border border-border text-foreground text-xs font-bold rounded-xl hover:bg-muted transition-all active:scale-95 shadow-sm"
                       >
                         Reprogramar
                       </button>
                       <button
-                        onClick={() => cancelar(cita.id)}
+                        onClick={() => setCancelCitaId(cita.id)}
                         className="px-5 py-2.5 bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-bold rounded-xl hover:bg-rose-500/20 transition-all active:scale-95 shadow-sm"
                       >
                         Cancelar
@@ -157,6 +188,80 @@ export default function MisCitasPage() {
           ))}
         </div>
       )}
+
+      {/* Modal Cancelar Cita */}
+      <Dialog open={cancelCitaId !== null} onOpenChange={(open) => !open && setCancelCitaId(null)}>
+        <DialogContent className="sm:max-w-md border-border bg-card text-foreground">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-rose-600 dark:text-rose-400">Cancelar Cita</DialogTitle>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="motivoCancelacion">Motivo de Cancelación</Label>
+              <Input
+                id="motivoCancelacion"
+                placeholder="Por favor indica el motivo..."
+                value={motivoCancelacion}
+                onChange={(e) => setMotivoCancelacion(e.target.value)}
+              />
+            </div>
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setCancelCitaId(null)}
+                className="px-4 py-2 border border-border bg-muted/50 rounded-xl font-semibold text-foreground hover:bg-muted transition-colors"
+                disabled={isCanceling}
+              >
+                Cerrar
+              </button>
+              <button
+                onClick={confirmarCancelacion}
+                disabled={!motivoCancelacion || isCanceling}
+                className="px-4 py-2 bg-rose-600 text-white rounded-xl font-semibold hover:bg-rose-500 transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                {isCanceling && <Loader2 className="w-4 h-4 animate-spin" />}
+                Confirmar Cancelación
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Reprogramar Cita */}
+      <Dialog open={reprogramarCitaId !== null} onOpenChange={(open) => !open && setReprogramarCitaId(null)}>
+        <DialogContent className="sm:max-w-md border-border bg-card text-foreground">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold">Reprogramar Cita</DialogTitle>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="nuevaFechaHora">Nueva Fecha y Hora</Label>
+              <Input
+                id="nuevaFechaHora"
+                type="datetime-local"
+                value={nuevaFechaHora}
+                onChange={(e) => setNuevaFechaHora(e.target.value)}
+              />
+            </div>
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => setReprogramarCitaId(null)}
+                className="px-4 py-2 border border-border bg-muted/50 rounded-xl font-semibold text-foreground hover:bg-muted transition-colors"
+                disabled={isReprogramando}
+              >
+                Cerrar
+              </button>
+              <button
+                onClick={confirmarReprogramacion}
+                disabled={!nuevaFechaHora || isReprogramando}
+                className="px-4 py-2 bg-emerald-600 text-white rounded-xl font-semibold hover:bg-emerald-500 transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                {isReprogramando && <Loader2 className="w-4 h-4 animate-spin" />}
+                Guardar Cambios
+              </button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
