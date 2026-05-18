@@ -1,12 +1,12 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { Stethoscope, LogOut } from "lucide-react";
+import { LogOut, Stethoscope } from "lucide-react";
+import anime from "animejs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { AuthService } from "@/services/auth.service";
-import anime from "animejs";
 
 interface NavItem {
   label: string;
@@ -28,6 +28,8 @@ export function AnimatedSidebar({
   rol = "Paciente",
 }: AnimatedSidebarProps) {
   const pathname = usePathname();
+  const sidebarRef = useRef<HTMLElement>(null);
+  const hasAnimatedRef = useRef(false);
   const isAdmin = pathname?.includes("/admin");
 
   const themeBg = isAdmin ? "bg-purple-500" : "bg-emerald-500";
@@ -41,16 +43,10 @@ export function AnimatedSidebar({
   const themeActiveBorder = isAdmin ? "border-purple-500/20" : "border-emerald-500/20";
   const themeActiveShadow = isAdmin ? "shadow-purple-500/30" : "shadow-emerald-500/30";
 
-  const router = useRouter();
-  const sidebarRef = useRef<HTMLElement>(null);
-  const navItemsRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
-
-  // ── Sidebar entrance animation ───────────────────────────
   useEffect(() => {
-    setMounted(true);
+    if (hasAnimatedRef.current) return;
+    hasAnimatedRef.current = true;
 
-    // Slide in sidebar
     anime({
       targets: sidebarRef.current,
       translateX: [-260, 0],
@@ -59,7 +55,6 @@ export function AnimatedSidebar({
       easing: "easeOutExpo",
     });
 
-    // Stagger nav items
     anime({
       targets: ".nav-item",
       translateX: [-20, 0],
@@ -71,7 +66,6 @@ export function AnimatedSidebar({
   }, []);
 
   const handleLogout = () => {
-    // Animate out before logout
     anime({
       targets: sidebarRef.current,
       translateX: [0, -260],
@@ -80,14 +74,13 @@ export function AnimatedSidebar({
       easing: "easeInExpo",
       complete: () => {
         AuthService.logout();
-        router.push("/login");
       },
     });
   };
 
-  const handleNavHover = (el: HTMLElement, entering: boolean) => {
+  const handleNavHover = (element: HTMLElement, entering: boolean) => {
     anime({
-      targets: el,
+      targets: element,
       translateX: entering ? 4 : 0,
       duration: 200,
       easing: "easeOutQuad",
@@ -97,30 +90,25 @@ export function AnimatedSidebar({
   return (
     <aside
       ref={sidebarRef}
-      className="fixed left-0 top-0 h-full w-64 bg-card/70 border-r border-border/60 backdrop-blur-sm
-                 flex flex-col z-10"
+      className="fixed left-0 top-0 z-10 flex h-full w-64 flex-col border-r border-border/60 bg-card/70 backdrop-blur-sm"
       style={{ opacity: 0 }}
     >
-      {/* Logo */}
       <div className="flex h-16 items-center gap-2 border-b border-border/50 px-6">
-        <div className={`flex items-center justify-center size-8 rounded-lg ${themeBg} shadow-lg ${themeShadow}`}>
+        <div className={`flex size-8 items-center justify-center rounded-lg ${themeBg} shadow-lg ${themeShadow}`}>
           <Stethoscope className="size-5 text-white" />
         </div>
-        <span className={`text-xl font-bold bg-gradient-to-r ${themeGradFrom} ${themeGradTo} bg-clip-text text-transparent ${themeGradDarkFrom} ${themeGradDarkTo}`}>
+        <span
+          className={`bg-gradient-to-r ${themeGradFrom} ${themeGradTo} ${themeGradDarkFrom} ${themeGradDarkTo} bg-clip-text text-xl font-bold text-transparent`}
+        >
           MedAgenda
         </span>
       </div>
 
-      {/* Title */}
-      <div className="px-6 py-3 border-b border-border/50">
-        <p className="text-xs font-medium text-muted-foreground uppercase
-                      tracking-wider">
-          {title}
-        </p>
+      <div className="border-b border-border/50 px-6 py-3">
+        <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{title}</p>
       </div>
 
-      {/* Nav */}
-      <nav ref={navItemsRef} className="flex-1 p-4 space-y-1 overflow-y-auto">
+      <nav className="flex-1 space-y-1 overflow-y-auto p-4">
         {navItems.map((item) => {
           const active = pathname === item.href;
           const Icon = item.icon;
@@ -129,63 +117,43 @@ export function AnimatedSidebar({
             <div key={item.href} className="nav-item" style={{ opacity: 0 }}>
               <Link
                 href={item.href}
-                onMouseEnter={(e) =>
-                  handleNavHover(e.currentTarget as HTMLElement, true)
-                }
-                onMouseLeave={(e) =>
-                  handleNavHover(e.currentTarget as HTMLElement, false)
-                }
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl
-                            text-sm font-medium transition-colors duration-200
-                            ${
-                              active
-                                ? `${themeActiveBg} ${themeActiveText} border ${themeActiveBorder}`
-                                : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                            }`}
+                onMouseEnter={(e) => handleNavHover(e.currentTarget as HTMLElement, true)}
+                onMouseLeave={(e) => handleNavHover(e.currentTarget as HTMLElement, false)}
+                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors duration-200 ${
+                  active
+                    ? `${themeActiveBg} ${themeActiveText} border ${themeActiveBorder}`
+                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                }`}
               >
                 <div
-                  className={`flex items-center justify-center size-7 rounded-lg
-                               transition-all duration-200
-                               ${
-                                 active
-                                   ? `${themeBg} shadow-sm ${themeActiveShadow}`
-                                   : "bg-secondary group-hover:bg-secondary/80"
-                               }`}
+                  className={`flex size-7 items-center justify-center rounded-lg transition-all duration-200 ${
+                    active ? `${themeBg} shadow-sm ${themeActiveShadow}` : "bg-secondary"
+                  }`}
                 >
-                  <Icon
-                    className={`size-4 ${
-                      active ? "text-white" : "text-muted-foreground"
-                    }`}
-                  />
+                  <Icon className={`size-4 ${active ? "text-white" : "text-muted-foreground"}`} />
                 </div>
                 {item.label}
-                {active && (
-                  <div className={`ml-auto w-1.5 h-1.5 rounded-full ${themeBg}`} />
-                )}
+                {active ? <div className={`ml-auto h-1.5 w-1.5 rounded-full ${themeBg}`} /> : null}
               </Link>
             </div>
           );
         })}
       </nav>
 
-      {/* User footer */}
-      <div className="p-4 border-t">
-        <div className="flex items-center gap-3 px-2 py-2 rounded-xl
-                        hover:bg-secondary transition-colors duration-200 group">
+      <div className="border-t p-4">
+        <div className="group flex items-center gap-3 rounded-xl px-2 py-2 transition-colors duration-200 hover:bg-secondary">
           <Avatar className={`size-9 border ${themeActiveBorder}`}>
             <AvatarFallback className={`${themeBg} text-white font-semibold`}>
               {nombreUsuario.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">{nombreUsuario}</p>
-            <p className="text-xs text-muted-foreground truncate">{rol}</p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-medium">{nombreUsuario}</p>
+            <p className="truncate text-xs text-muted-foreground">{rol}</p>
           </div>
           <button
             onClick={handleLogout}
-            className="opacity-0 group-hover:opacity-100 transition-opacity
-                       duration-200 p-1.5 rounded-lg hover:bg-destructive/10
-                       hover:text-destructive"
+            className="rounded-lg p-1.5 opacity-0 transition-opacity duration-200 hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
           >
             <LogOut className="size-4" />
           </button>

@@ -5,6 +5,8 @@ import anime from "animejs";
 // ── Hook: useStaggerAnimation ─────────────────────────────────
 // Use this on any list of cards to animate them in with stagger
 export function useStaggerAnimation(selector: string, deps: any[] = []) {
+  const dependencyKey = JSON.stringify(deps);
+
   useEffect(() => {
     anime({
       targets: selector,
@@ -14,7 +16,7 @@ export function useStaggerAnimation(selector: string, deps: any[] = []) {
       delay: anime.stagger(120, { start: 100 }),
       easing: "easeOutExpo",
     });
-  }, deps);
+  }, [dependencyKey, selector]);
 }
 
 // ── Hook: usePageTransition ───────────────────────────────────

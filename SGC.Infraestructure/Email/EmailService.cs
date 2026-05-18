@@ -11,10 +11,13 @@ namespace SGC.Infraestructure.Email
     {
         private readonly IConfiguration _config;
         private static readonly HttpClient _httpClient = new();
+        private readonly string _frontendBaseUrl;
 
         public EmailService(IConfiguration config)
         {
             _config = config;
+            _frontendBaseUrl = _config["Frontend:BaseUrl"]?.Trim().TrimEnd('/')
+                ?? "https://medagenda.me";
         }
 
         // Método privado para enviar un correo electrónico genérico utilizando la API HTTP de Brevo
@@ -135,7 +138,7 @@ namespace SGC.Infraestructure.Email
                       <li>🤖 Consultar a nuestro asistente virtual 24/7</li>
                     </ul>
                     <div style='text-align:center;margin-top:28px;'>
-                      <a href='http://localhost:3000/paciente/dashboard' style='background:#10b981;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;display:inline-block;'>
+                      <a href='{_frontendBaseUrl}/paciente/dashboard' style='background:#10b981;color:#fff;padding:14px 32px;border-radius:8px;text-decoration:none;font-weight:600;font-size:15px;display:inline-block;'>
                         Ir a mi dashboard
                       </a>
                     </div>

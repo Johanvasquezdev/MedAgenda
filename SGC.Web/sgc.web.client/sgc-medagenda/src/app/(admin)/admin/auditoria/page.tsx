@@ -89,7 +89,7 @@ export default function AuditoriaPage() {
               ) : registros.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="p-16 text-center text-muted-foreground font-bold">
-                    No se encontraron registros de auditoría para la entidad "{entidad}".
+                    No se encontraron registros de auditoría para la entidad &quot;{entidad}&quot;.
                   </td>
                 </tr>
               ) : (

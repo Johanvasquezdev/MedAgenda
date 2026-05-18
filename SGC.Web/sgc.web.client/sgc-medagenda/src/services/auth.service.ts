@@ -60,6 +60,6 @@ export class AuthService {
     document.cookie = 'medagenda_token=; path=/; max-age=0';
     document.cookie = 'medagenda_role=; path=/; max-age=0';
     window.dispatchEvent(new Event('auth-changed'));
-    window.location.href = '/login';
+    window.location.href = '/';
   }
 }

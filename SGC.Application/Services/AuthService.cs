@@ -1,4 +1,5 @@
 using BCrypt.Net;
+using Microsoft.Extensions.Configuration;
 using SGC.Application.Contracts;
 using SGC.Application.DTOs.Security;
 using SGC.Application.Services.Base;
@@ -18,18 +19,27 @@ namespace SGC.Application.Services
         private readonly ITokenService _tokenService;
         private readonly IEmailService _emailService;
         private readonly ICacheService _cacheService;
+        private readonly string _frontendBaseUrl;
+        private readonly bool _isDevelopment;
 
         public AuthService(
             IUsuarioRepository usuarioRepository,
             ITokenService tokenService,
             IEmailService emailService,
             ICacheService cacheService,
+            IConfiguration configuration,
             ISGCLogger logger) : base(logger)
         {
             _usuarioRepository = usuarioRepository;
             _tokenService = tokenService;
             _emailService = emailService;
             _cacheService = cacheService;
+            _frontendBaseUrl = configuration["Frontend:BaseUrl"]?.Trim().TrimEnd('/')
+                ?? throw new InvalidOperationException("Frontend:BaseUrl no configurado.");
+            _isDevelopment = string.Equals(
+                configuration["ASPNETCORE_ENVIRONMENT"],
+                "Development",
+                StringComparison.OrdinalIgnoreCase);
         }
 
         // Metodo para autenticar a un usuario y generar un token JWT
@@ -98,14 +108,33 @@ namespace SGC.Application.Services
                         await _cacheService.SetAsync(cacheKey, resetToken, TimeSpan.FromHours(1));
 
                         // Link de reset apuntando al frontend
-                        var resetLink = $"http://localhost:3000/reset-password?token={resetToken}&email={Uri.EscapeDataString(request.Email)}";
-                        await _emailService.EnviarPasswordResetAsync(request.Email, resetLink);
-                        LogOperacion("PasswordResetSolicitado", $"Email: {request.Email}");
+                        var resetLink = $"{_frontendBaseUrl}/reset-password?token={resetToken}&email={Uri.EscapeDataString(request.Email)}";
+                        LogOperacion("PasswordResetLinkGenerado", $"Email: {request.Email} | Link: {resetLink}");
+
+                        try
+                        {
+                            await _emailService.EnviarPasswordResetAsync(request.Email, resetLink);
+                            LogOperacion("PasswordResetSolicitado", $"Email: {request.Email}");
+                        }
+                        catch (Exception ex)
+                        {
+                            LogError("PasswordResetEmailError", ex);
+
+                            if (_isDevelopment)
+                            {
+                                throw new ValidationDomainException(
+                                    "No se pudo enviar el correo de restablecimiento. Revisa la configuracion de Brevo.",
+                                    ex);
+                            }
+                        }
                     }
                     catch (Exception ex)
                     {
-                        // Log el error real para diagnosticar (no se expone al cliente)
-                        LogOperacion("PasswordResetError", $"Email: {request.Email} | Error: {ex.Message}");
+                        LogError("PasswordResetError", ex);
+                        if (_isDevelopment)
+                        {
+                            throw;
+                        }
                     }
                 },
                 $"Email: {request.Email}");

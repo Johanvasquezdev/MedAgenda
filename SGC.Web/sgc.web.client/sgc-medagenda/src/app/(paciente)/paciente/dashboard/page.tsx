@@ -105,7 +105,7 @@ export default function PacienteDashboard() {
             Panel de Control
           </p>
           <h1 className="text-3xl md:text-4xl font-black tracking-tight text-foreground">
-            Hola, <span className="text-emerald-600 dark:text-emerald-400">{user?.nombre?.split(" ")[0] || "Paciente"}</span>
+            Bienvenido, <span className="text-emerald-600 dark:text-emerald-400">{user?.nombre?.split(" ")[0] || "Paciente"}</span>
           </h1>
           <p className="mt-2 text-muted-foreground font-medium max-w-xl leading-relaxed">
             Gestiona tus citas de forma inteligente y mantén un seguimiento detallado de tu salud.
