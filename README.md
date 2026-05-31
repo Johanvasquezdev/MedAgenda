@@ -67,33 +67,6 @@ Fuera de alcance:
 
 - App Medico (agenda, gestion de citas, disponibilidad, historial de pacientes, seguridad JWT).
 
-## Ramas
-
-- `feature/web-20251235` (Web - Johan)
-- `feature/Desktop-20251232` (Desktop - Gregori)
-- Ramas compartidas: `feature/api`, `feature/ioc`, `feature/infraestructure`, `feature/dominio`, `feature/persistencia`, `feature/application`, `feature/unittest`
-
-## API
-
-Swagger UI local: `http://localhost:5189/swagger`
-
-## Docker quickstart
-
-1. Copy `.env.example` to `.env` and set real values.
-2. Start API container:
-
-```bash
-docker compose up --build -d
-```
-
-3. Verify API is up at `http://localhost:5189/swagger`.
-
-Notes:
-
-- `docker-compose.yml` maps container port `8080` to host `5189`.
-- Database/Redis in `.env.example` use `host.docker.internal` so local services can be used from container.
-- Configure CORS origins using `SGC_CORS_ORIGIN_0`/`SGC_CORS_ORIGIN_1` (or `Cors:AllowedOrigins`).
-- Outside Development, API startup fails if `Cors:AllowedOrigins` is not configured.
 
 ## Documentacion
 
