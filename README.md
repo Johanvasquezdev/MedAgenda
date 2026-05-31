@@ -2,9 +2,6 @@
 
 Proyecto academico de Programacion II (ITLA 2026).
 
-## Nota sobre ramas y autoria
-
-Las ramas sin matricula (`feature/api`, `feature/ioc`, `feature/application`, `feature/dominio`, `feature/persistencia`, `feature/unittest`) fueron trabajadas en conjunto por Johan Vasquez y Gregori Evangelista.
 
 ## Descripcion del proyecto
 
