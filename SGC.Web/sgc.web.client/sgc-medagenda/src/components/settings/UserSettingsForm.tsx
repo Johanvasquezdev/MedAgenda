@@ -6,10 +6,10 @@ import { PerfilService } from "@/services/perfil.service";
 import { useAuth } from "@/components/providers/AuthProvider";
 
 interface UserSettingsFormProps {
-  accentColor?: "indigo" | "emerald";
+  accentColor?: "emerald" | "emerald";
 }
 
-export function UserSettingsForm({ accentColor = "indigo" }: UserSettingsFormProps) {
+export function UserSettingsForm({ accentColor = "emerald" }: UserSettingsFormProps) {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [savingProfile, setSavingProfile] = useState(false);
@@ -110,33 +110,31 @@ export function UserSettingsForm({ accentColor = "indigo" }: UserSettingsFormPro
   if (loading) {
     return (
       <div className="rounded-3xl border border-border bg-card/50 p-12 text-center text-muted-foreground shadow-sm">
-        <Loader2 className={`mx-auto mb-4 h-8 w-8 animate-spin ${accentColor === 'indigo' ? 'text-indigo-500' : 'text-emerald-500'}`} />
+        <Loader2 className={`mx-auto mb-4 h-8 w-8 animate-spin ${accentColor === 'emerald' ? 'text-emerald-500' : 'text-emerald-500'}`} />
         <p className="text-sm font-bold uppercase tracking-widest opacity-60">Cargando perfil...</p>
       </div>
     );
   }
 
-  const ringColor = accentColor === "indigo" ? "focus:ring-indigo-500/20 focus:border-indigo-500" : "focus:ring-emerald-500/20 focus:border-emerald-500";
-  const bgColor = accentColor === "indigo" ? "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20" : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20";
-  const btnColor = accentColor === "indigo" ? "bg-indigo-600 hover:bg-indigo-500 shadow-indigo-500/20" : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/20";
+  const ringColor = accentColor === "emerald" ? "focus:ring-emerald-500/20 focus:border-emerald-500" : "focus:ring-emerald-500/20 focus:border-emerald-500";
+  const bgColor = accentColor === "emerald" ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20";
+  const btnColor = accentColor === "emerald" ? "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/20" : "bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/20";
 
   return (
     <div className="space-y-6">
       <section className="rounded-2xl border border-border bg-card p-6 shadow-sm relative overflow-hidden group">
-        <div className={`absolute -right-8 -top-8 h-24 w-24 rounded-full blur-2xl opacity-10 transition-opacity group-hover:opacity-20 ${accentColor === 'indigo' ? 'bg-indigo-500' : 'bg-emerald-500'}`} />
-        
         <div className="flex items-center gap-5 relative z-10">
           <div className={`h-20 w-20 rounded-2xl border-2 font-black text-3xl flex items-center justify-center shadow-inner transition-transform group-hover:scale-105 duration-300 ${bgColor}`}>
             {initials}
           </div>
           <div>
             <h2 className="text-xl font-black text-foreground flex items-center gap-2 uppercase tracking-tight">
-              <CircleUserRound className={`h-6 w-6 ${accentColor === 'indigo' ? 'text-indigo-500' : 'text-emerald-500'}`} />
+              <CircleUserRound className={`h-6 w-6 ${accentColor === 'emerald' ? 'text-emerald-500' : 'text-emerald-500'}`} />
               Foto de Perfil
             </h2>
             <p className="text-sm text-muted-foreground font-medium mt-1">
               Personaliza tu identidad visual en la plataforma.
-              <span className={`block mt-1 text-[10px] uppercase font-black tracking-widest ${accentColor === 'indigo' ? 'text-indigo-600 dark:text-indigo-400' : 'text-emerald-600 dark:text-emerald-400'}`}>Próximamente disponible</span>
+              <span className={`block mt-1 text-[10px] uppercase font-black tracking-widest ${accentColor === 'emerald' ? 'text-emerald-600 dark:text-emerald-400' : 'text-emerald-600 dark:text-emerald-400'}`}>Próximamente disponible</span>
             </p>
           </div>
         </div>
@@ -144,10 +142,10 @@ export function UserSettingsForm({ accentColor = "indigo" }: UserSettingsFormPro
 
       <section className="rounded-2xl border border-border bg-card p-6 space-y-6 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
-          <div className={`h-8 w-1.5 rounded-full ${accentColor === 'indigo' ? 'bg-indigo-500' : 'bg-emerald-500'}`} />
+          <div className={`h-8 w-1.5 rounded-full ${accentColor === 'emerald' ? 'bg-emerald-500' : 'bg-emerald-500'}`} />
           <h2 className="text-xl font-black text-foreground uppercase tracking-tight">Datos del Perfil</h2>
         </div>
-        
+
         <form className="grid gap-6" onSubmit={handleGuardarPerfil}>
           <div className="grid gap-5 md:grid-cols-2">
             <div className="space-y-2">
@@ -212,10 +210,10 @@ export function UserSettingsForm({ accentColor = "indigo" }: UserSettingsFormPro
         </form>
       </section>
 
-      <section className="rounded-2xl border border-border bg-gradient-to-br from-indigo-500/5 via-card to-card p-6 space-y-6 shadow-sm border-l-4 border-l-indigo-500">
+      <section className="rounded-2xl border border-border bg-card p-6 space-y-6 shadow-sm">
         <div className="flex items-center gap-2 mb-2">
           <h2 className="text-xl font-black text-foreground flex items-center gap-2 uppercase tracking-tight">
-            <Shield className="h-6 w-6 text-indigo-500" />
+            <Shield className="h-6 w-6 text-emerald-500" />
             Seguridad y Contraseña
           </h2>
         </div>
@@ -228,7 +226,7 @@ export function UserSettingsForm({ accentColor = "indigo" }: UserSettingsFormPro
                 type="password"
                 value={passwordActual}
                 onChange={(e) => setPasswordActual(e.target.value)}
-                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all placeholder:text-muted-foreground/30 shadow-sm"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all placeholder:text-muted-foreground/30 shadow-sm"
                 required
                 placeholder="••••••••"
               />
@@ -240,7 +238,7 @@ export function UserSettingsForm({ accentColor = "indigo" }: UserSettingsFormPro
                 type="password"
                 value={passwordNueva}
                 onChange={(e) => setPasswordNueva(e.target.value)}
-                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all placeholder:text-muted-foreground/30 shadow-sm"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all placeholder:text-muted-foreground/30 shadow-sm"
                 required
                 placeholder="Mínimo 8 caracteres"
               />
@@ -252,7 +250,7 @@ export function UserSettingsForm({ accentColor = "indigo" }: UserSettingsFormPro
                 type="password"
                 value={passwordConfirmacion}
                 onChange={(e) => setPasswordConfirmacion(e.target.value)}
-                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all placeholder:text-muted-foreground/30 shadow-sm"
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all placeholder:text-muted-foreground/30 shadow-sm"
                 required
                 placeholder="Repite la nueva contraseña"
               />
@@ -263,7 +261,7 @@ export function UserSettingsForm({ accentColor = "indigo" }: UserSettingsFormPro
             <button
               type="submit"
               disabled={savingPassword}
-              className="inline-flex items-center justify-center rounded-xl bg-indigo-600 px-8 py-3 text-sm font-black uppercase tracking-widest text-white hover:bg-indigo-500 transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-indigo-500/20"
+              className="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-8 py-3 text-sm font-black uppercase tracking-widest text-white hover:bg-emerald-500 transition-all active:scale-95 disabled:opacity-50 shadow-lg shadow-emerald-500/20"
             >
               {savingPassword ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : "Actualizar Contraseña"}
             </button>

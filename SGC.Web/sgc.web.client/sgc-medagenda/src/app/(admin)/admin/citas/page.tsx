@@ -84,17 +84,15 @@ export default function AdminCitasPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6 page-content">
-      <header className="relative overflow-hidden rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/15 via-white dark:via-slate-950 to-purple-500/15 p-6 md:p-7 shadow-sm">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-indigo-500/10 dark:bg-indigo-500/20 blur-3xl opacity-50" />
-        <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-purple-500/10 dark:bg-purple-500/20 blur-3xl opacity-50" />
+      <header className="rounded-2xl border border-border bg-card p-6 md:p-7 shadow-sm">
 
         <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">
               Administración
             </p>
             <h1 className="mt-2 flex items-center gap-2 text-3xl font-black tracking-tight text-foreground">
-              <CalendarCheck className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
+              <CalendarCheck className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
               Gestión de Citas
             </h1>
             <p className="mt-2 max-w-2xl text-muted-foreground font-medium">
@@ -102,7 +100,7 @@ export default function AdminCitasPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-border bg-card/40 px-5 py-3 backdrop-blur-sm shadow-sm border-l-4 border-l-indigo-500/50">
+          <div className="rounded-2xl border border-border bg-card px-5 py-3  shadow-sm ">
             <p className="text-xs text-muted-foreground font-black uppercase tracking-widest">Resultados Actuales</p>
             <p className="text-2xl font-black text-foreground leading-tight">{loading ? "--" : totalFiltradas}</p>
           </div>
@@ -128,8 +126,8 @@ export default function AdminCitasPage() {
           </div>
           <p className="mt-1 text-2xl font-black text-foreground">{loading ? "--" : confirmadas}</p>
         </article>
-        <article className="rounded-2xl border border-indigo-500/30 bg-indigo-500/10 p-5 shadow-sm">
-          <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
+        <article className="rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-5 shadow-sm">
+          <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
             <Activity className="h-4 w-4" />
             <p className="text-xs font-black uppercase tracking-widest">En Progreso</p>
           </div>
@@ -137,7 +135,7 @@ export default function AdminCitasPage() {
         </article>
       </section>
 
-      <section className="rounded-2xl border border-border bg-card/50 p-6 shadow-sm border-l-4 border-l-indigo-500/50">
+      <section className="rounded-2xl border border-border bg-card/50 p-6 shadow-sm ">
         <div className="mb-4 flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground">
           <Search className="h-3 w-3" />
           Filtros de Consulta Operativa
@@ -149,7 +147,7 @@ export default function AdminCitasPage() {
             <input
               value={pacienteId}
               onChange={(e) => setPacienteId(e.target.value)}
-              className="w-full md:w-48 px-4 py-2.5 rounded-xl bg-background border border-border text-foreground font-medium focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all placeholder:text-muted-foreground/30"
+              className="w-full md:w-48 px-4 py-2.5 rounded-xl bg-background border border-border text-foreground font-medium focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all placeholder:text-muted-foreground/30"
               placeholder="Ej: 17"
             />
           </div>
@@ -158,7 +156,7 @@ export default function AdminCitasPage() {
             <input
               value={medicoId}
               onChange={(e) => setMedicoId(e.target.value)}
-              className="w-full md:w-48 px-4 py-2.5 rounded-xl bg-background border border-border text-foreground font-medium focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all placeholder:text-muted-foreground/30"
+              className="w-full md:w-48 px-4 py-2.5 rounded-xl bg-background border border-border text-foreground font-medium focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all placeholder:text-muted-foreground/30"
               placeholder="Ej: 16"
             />
           </div>
@@ -168,10 +166,10 @@ export default function AdminCitasPage() {
               type="date"
               value={fecha}
               onChange={(e) => setFecha(e.target.value)}
-              className="w-full md:w-48 px-4 py-2.5 rounded-xl bg-background border border-border text-foreground font-medium focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all"
+              className="w-full md:w-48 px-4 py-2.5 rounded-xl bg-background border border-border text-foreground font-medium focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
             />
           </div>
-          <button onClick={cargar} className="w-full md:w-auto px-8 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black shadow-lg shadow-indigo-500/20 transition-all active:scale-95">
+          <button onClick={cargar} className="w-full md:w-auto px-8 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black shadow-lg shadow-emerald-500/20 transition-all active:scale-95">
             Buscar
           </button>
           {error && <span className="text-rose-600 dark:text-rose-400 text-xs font-bold mb-2.5">{error}</span>}
@@ -193,7 +191,7 @@ export default function AdminCitasPage() {
               {loading ? (
                 <tr>
                   <td colSpan={4} className="p-16 text-center">
-                    <Loader2 className="animate-spin mx-auto h-10 w-10 text-indigo-500" />
+                    <Loader2 className="animate-spin mx-auto h-10 w-10 text-emerald-500" />
                   </td>
                 </tr>
               ) : citasFiltradas.length === 0 ? (
@@ -217,7 +215,7 @@ export default function AdminCitasPage() {
                         <button onClick={() => confirmar(c.id)} className="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition-all active:scale-95 shadow-sm">
                           Confirmar
                         </button>
-                        <button onClick={() => iniciar(c.id)} className="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border border-indigo-500/40 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-500/10 transition-all active:scale-95 shadow-sm">
+                        <button onClick={() => iniciar(c.id)} className="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition-all active:scale-95 shadow-sm">
                           Iniciar
                         </button>
                         <button onClick={() => asistencia(c.id, true)} className="px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition-all active:scale-95 shadow-sm">

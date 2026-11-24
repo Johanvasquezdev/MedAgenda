@@ -54,22 +54,22 @@ export function CheckoutForm({
 
   if (isSuccess)
     return (
-      <div className="text-center py-8">
+      <div className="rounded-2xl border border-border bg-card p-8 text-center">
         <ShieldCheck className="w-16 h-16 text-teal-500 mx-auto" />
-        <h3>¡Pago Exitoso!</h3>
+        <h3 className="mt-4 text-xl font-semibold text-foreground">¡Pago exitoso!</h3>
       </div>
     );
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-2xl border max-w-md mx-auto"
+      className="mx-auto max-w-md rounded-2xl border border-border bg-card p-5 text-foreground sm:p-6"
     >
       <PaymentElement options={{ layout: "tabs" }} />
-      {error && <div className="mt-4 text-red-500 text-sm">{error}</div>}
+      {error && <div role="alert" className="mt-4 rounded-xl border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">{error}</div>}
       <button
         disabled={isLoading || !stripe}
-        className="mt-6 w-full bg-teal-600 text-white py-3 rounded-xl"
+        className="mt-6 min-h-11 w-full rounded-xl bg-primary px-4 font-semibold text-primary-foreground transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isLoading ? <Loader2 className="animate-spin" /> : "Pagar Ahora"}
       </button>

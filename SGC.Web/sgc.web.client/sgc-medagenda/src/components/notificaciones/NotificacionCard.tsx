@@ -1,4 +1,4 @@
-﻿import { CalendarClock, CreditCard, Info } from "lucide-react";
+import { CalendarClock, CreditCard, Info } from "lucide-react";
 
 interface NotificacionCardProps {
   tipo: "cita" | "pago" | "info" | string;
@@ -9,71 +9,29 @@ interface NotificacionCardProps {
   onClick: () => void;
 }
 
-export function NotificacionCard({
-  tipo,
-  titulo,
-  mensaje,
-  fecha,
-  leida,
-  onClick,
-}: NotificacionCardProps) {
-  const getIcon = () => {
-    switch (tipo) {
-      case "cita":
-        return (
-          <CalendarClock className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-        );
-      case "pago":
-        return (
-          <CreditCard className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-        );
-      default:
-        return <Info className="w-5 h-5 text-blue-600 dark:text-blue-400" />;
-    }
-  };
-
-  const getBgColor = () => {
-    switch (tipo) {
-      case "cita":
-        return "bg-emerald-100 dark:bg-emerald-900/30";
-      case "pago":
-        return "bg-emerald-100 dark:bg-emerald-900/30";
-      default:
-        return "bg-blue-100 dark:bg-blue-900/30";
-    }
-  };
+export function NotificacionCard({ tipo, titulo, mensaje, fecha, leida, onClick }: NotificacionCardProps) {
+  const Icon = tipo === "cita" ? CalendarClock : tipo === "pago" ? CreditCard : Info;
 
   return (
-    <div
+    <button
+      type="button"
       onClick={onClick}
-      className={`p-5 rounded-2xl border transition-all cursor-pointer flex gap-4 ${
-        leida
-          ? "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50"
-          : "bg-emerald-50/50 dark:bg-emerald-900/10 border-emerald-100 dark:border-emerald-800/50 shadow-sm hover:shadow-md"
+      aria-label={`${leida ? "Abrir" : "Marcar como leída y abrir"}: ${titulo}`}
+      className={`flex w-full items-start gap-4 rounded-2xl border p-4 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring sm:p-5 ${
+        leida ? "border-border bg-card hover:bg-muted/70" : "border-primary/25 bg-accent/60 hover:bg-accent"
       }`}
     >
-      <div className={`p-3 rounded-xl h-fit ${getBgColor()}`}>{getIcon()}</div>
-
-      <div className="flex-1">
-        <div className="flex justify-between items-start">
-          <h3
-            className={`font-semibold ${leida ? "text-slate-700 dark:text-slate-300" : "text-slate-900 dark:text-white"}`}
-          >
-            {titulo}
-          </h3>
-          <span className="text-xs text-slate-400">{fecha}</span>
-        </div>
-        <p
-          className={`text-sm mt-1 ${leida ? "text-slate-500" : "text-slate-600 dark:text-slate-300"}`}
-        >
-          {mensaje}
-        </p>
-      </div>
-
-      {!leida && (
-        <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 self-center flex-shrink-0 animate-pulse"></div>
-      )}
-    </div>
+      <span aria-hidden="true" className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-background text-primary ring-1 ring-border">
+        <Icon className="size-5" />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="flex flex-wrap items-start justify-between gap-x-4 gap-y-1">
+          <span className="font-semibold text-foreground">{titulo}</span>
+          <span className="shrink-0 text-xs text-muted-foreground">{fecha}</span>
+        </span>
+        <span className="mt-1 block text-sm leading-6 text-muted-foreground">{mensaje}</span>
+      </span>
+      {!leida ? <span aria-label="Sin leer" className="mt-2 size-2.5 shrink-0 rounded-full bg-primary" /> : null}
+    </button>
   );
 }
-

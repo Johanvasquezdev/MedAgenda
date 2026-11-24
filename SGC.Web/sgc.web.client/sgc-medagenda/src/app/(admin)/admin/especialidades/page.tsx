@@ -81,17 +81,15 @@ export default function EspecialidadesPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6 page-content">
-      <header className="relative overflow-hidden rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/15 via-white dark:via-slate-950 to-purple-500/15 p-6 md:p-7 shadow-sm">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-indigo-500/10 dark:bg-indigo-500/20 blur-3xl opacity-50" />
-        <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-purple-500/10 dark:bg-purple-500/20 blur-3xl opacity-50" />
+      <header className="rounded-2xl border border-border bg-card p-6 md:p-7 shadow-sm">
 
         <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">
               Administración
             </p>
             <h1 className="mt-2 flex items-center gap-2 text-3xl font-black tracking-tight text-foreground">
-              <Stethoscope className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
+              <Stethoscope className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
               Especialidades Médicas
             </h1>
             <p className="mt-2 max-w-2xl text-muted-foreground font-medium">
@@ -102,7 +100,7 @@ export default function EspecialidadesPage() {
           <button
             type="button"
             onClick={abrirCrear}
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+            className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-emerald-500/20 active:scale-95"
           >
             <Plus aria-hidden="true" className="h-4 w-4" /> Añadir nueva
           </button>
@@ -135,7 +133,7 @@ export default function EspecialidadesPage() {
         />
       </section>
 
-      <section className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-4 shadow-sm border-l-4 border-l-indigo-500/50">
+      <section className="bg-card border border-border rounded-2xl p-4 shadow-sm ">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <label htmlFor={busquedaInputId} className="relative block w-full sm:max-w-sm">
             <Search aria-hidden="true" className="pointer-events-none absolute left-4 h-5 w-5 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -145,7 +143,7 @@ export default function EspecialidadesPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar por nombre o descripción..."
-              className="w-full rounded-xl border border-border bg-background py-3 pl-12 pr-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all shadow-sm"
+              className="w-full rounded-xl border border-border bg-background py-3 pl-12 pr-4 text-sm text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shadow-sm"
             />
           </label>
           <p className="text-xs font-bold text-muted-foreground bg-muted px-3 py-1 rounded-full border border-border">
@@ -169,7 +167,7 @@ export default function EspecialidadesPage() {
               {loading ? (
                 <tr>
                   <td colSpan={4} className="p-12 text-center">
-                    <Loader2 className="animate-spin mx-auto text-indigo-500 h-8 w-8" />
+                    <Loader2 className="animate-spin mx-auto text-emerald-500 h-8 w-8" />
                   </td>
                 </tr>
               ) : especialidadesFiltradas.length === 0 ? (
@@ -182,7 +180,7 @@ export default function EspecialidadesPage() {
                 especialidadesFiltradas.map((esp) => (
                   <tr key={esp.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors group">
                     <td className="p-4">
-                      <p className="font-bold text-foreground text-base group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">{esp.nombre}</p>
+                      <p className="font-bold text-foreground text-base group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">{esp.nombre}</p>
                     </td>
                     <td className="p-4 text-muted-foreground font-medium truncate max-w-xs">{esp.descripcion || "Sin descripción"}</td>
                     <td className="p-4 text-center">
@@ -214,7 +212,7 @@ export default function EspecialidadesPage() {
       </AnimatedCard>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4 animate-in fade-in duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80  p-4 animate-in fade-in duration-300">
           <div className="w-full max-w-lg bg-card border border-border rounded-3xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
             <div className="flex items-center justify-between px-6 py-5 border-b border-border bg-muted/30">
               <h2 className="text-xl font-black text-foreground">
@@ -231,7 +229,7 @@ export default function EspecialidadesPage() {
                   id={nombreInputId}
                   required
                   placeholder="Ej: Cardiología"
-                  className="w-full px-4 py-3 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground/40 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none font-medium"
+                  className="w-full px-4 py-3 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground/40 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all outline-none font-medium"
                   value={formData.nombre}
                   onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                 />
@@ -242,7 +240,7 @@ export default function EspecialidadesPage() {
                   id={descripcionInputId}
                   placeholder="Describe brevemente esta especialidad..."
                   rows={4}
-                  className="w-full px-4 py-3 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground/40 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all outline-none font-medium resize-none"
+                  className="w-full px-4 py-3 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground/40 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all outline-none font-medium resize-none"
                   value={formData.descripcion}
                   onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
                 />
@@ -258,7 +256,7 @@ export default function EspecialidadesPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-500/20 transition-all active:scale-95"
+                  className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
                 >
                   {modoEdicion ? "Guardar Cambios" : "Crear Especialidad"}
                 </button>

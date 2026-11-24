@@ -6,6 +6,7 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { PageTransition } from "@/components/layout/PageTransition";
+import { BrandLockup } from "@/components/brand/BrandLockup";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Home, Settings as SettingsIcon, LogOut } from "lucide-react";
+import { Menu, Settings as SettingsIcon, LogOut } from "lucide-react";
 import { AuthService } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 
@@ -34,37 +35,22 @@ export default function PacienteLayout({ children }: { children: React.ReactNode
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background text-foreground transition-colors duration-300">
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div
-          className="absolute -right-56 -top-56 h-[640px] w-[640px] rounded-full opacity-[0.08]"
-          style={{ background: "radial-gradient(circle, #10b981 0%, transparent 70%)" }}
-        />
-        <div
-          className="absolute -bottom-56 -left-56 h-[640px] w-[640px] rounded-full opacity-[0.08]"
-          style={{ background: "radial-gradient(circle, #34d399 0%, transparent 70%)" }}
-        />
-        <div
-          className="absolute right-1/4 top-1/3 h-[420px] w-[420px] rounded-full opacity-[0.05]"
-          style={{ background: "radial-gradient(circle, #22c55e 0%, transparent 70%)" }}
-        />
-      </div>
-
       <div className="relative z-10 flex min-h-screen">
-        <aside className="hidden w-72 shrink-0 lg:block">
-          <div className="sticky top-0 h-screen">
+        <aside className="hidden w-64 shrink-0 lg:block">
+          <div className="sticky top-0 h-dvh">
             <Sidebar />
           </div>
         </aside>
 
         <div className="flex min-w-0 min-h-screen flex-1 flex-col">
-          <header className="sticky top-0 z-30 border-b border-border bg-background/50 backdrop-blur-xl">
+          <header className="sticky top-0 z-30 border-b border-border bg-background">
             <div className="px-4 py-4 md:px-6">
-              <div className="mx-auto flex w-full max-w-4xl items-center gap-4">
-                {/* Mobile Menu & Home */}
+              <div className="mx-auto flex w-full max-w-7xl items-center gap-3 sm:gap-4">
+                {/* Mobile navigation and brand */}
                 <div className="flex shrink-0 lg:hidden items-center gap-2">
                   <Sheet>
                     <SheetTrigger asChild>
-                      <Button variant="outline" size="icon" className="shrink-0 bg-secondary/50">
+                      <Button variant="outline" size="icon" className="size-11 shrink-0 bg-secondary/50">
                         <Menu className="h-5 w-5" />
                         <span className="sr-only">Toggle navigation menu</span>
                       </Button>
@@ -75,17 +61,16 @@ export default function PacienteLayout({ children }: { children: React.ReactNode
                       <Sidebar />
                     </SheetContent>
                   </Sheet>
-                  <Button variant="outline" size="icon" className="shrink-0 bg-secondary/50" onClick={() => router.push("/paciente/dashboard")}>
-                    <Home className="h-5 w-5 text-emerald-600" />
-                    <span className="sr-only">Dashboard Home</span>
-                  </Button>
+                  <Link href="/paciente/dashboard" aria-label="MedAgenda, ir al dashboard" className="rounded-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring">
+                    <BrandLockup markSize="sm" className="text-sm" />
+                  </Link>
                 </div>
 
-                <div className="relative min-w-0 max-w-2xl flex-1">
+                <div className="relative hidden min-w-0 max-w-2xl flex-1 sm:block">
                   <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <input
                     placeholder="Buscar médicos, citas..."
-                    className="w-full rounded-xl border border-border bg-secondary py-2.5 pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-transparent"
+                    className="min-h-11 w-full rounded-xl border border-border bg-secondary pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                   />
                 </div>
 
@@ -94,20 +79,17 @@ export default function PacienteLayout({ children }: { children: React.ReactNode
 
                   <Link
                     href="/paciente/notificaciones"
-                    className="relative rounded-xl border border-border bg-secondary p-2 text-muted-foreground transition-all hover:bg-secondary/80 hover:text-foreground"
+                    className="relative flex size-11 items-center justify-center rounded-xl border border-border bg-secondary text-muted-foreground transition-colors hover:bg-secondary/80 hover:text-foreground"
                     aria-label="Abrir notificaciones"
                   >
                     <Bell className="h-5 w-5" />
-                    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-emerald-500 text-[10px] font-bold text-white">
-                      3
-                    </span>
                   </Link>
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <button
                         aria-label="Abrir menú de usuario"
-                        className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-500 text-sm font-semibold text-white transition-all hover:bg-emerald-600 outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-background"
+                        className="flex size-11 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground transition-colors hover:brightness-110 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
                       >
                         {initials}
                       </button>
@@ -142,7 +124,7 @@ export default function PacienteLayout({ children }: { children: React.ReactNode
             <PageTransition>{children}</PageTransition>
           </main>
         </div>
-        
+
         {/* Global Chatbot Floating Action Button & Window */}
         <GlobalChatbotWidget />
       </div>

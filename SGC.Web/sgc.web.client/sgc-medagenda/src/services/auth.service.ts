@@ -4,7 +4,7 @@ import { AuthUser } from '@/types/auth.types';
 import { UsuarioService } from '@/services/usuario.service';
 
 export interface LoginRequest {
-  email: string;
+  identifier: string;
   password: string;
 }
 
@@ -17,7 +17,10 @@ export interface LoginResponse {
 
 export class AuthService {
   static async login(credenciales: LoginRequest): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>('/api/auth/login', credenciales);
+    const response = await api.post<LoginResponse>('/api/auth/login', {
+      email: credenciales.identifier,
+      password: credenciales.password,
+    });
 
     // Guarda token y datos basicos del usuario para el resto de la app.
     if (response.data.token) {
@@ -26,8 +29,9 @@ export class AuthService {
       if (!userId) {
         try {
           const usuarios = await UsuarioService.obtenerTodos(response.data.rol);
+          const identifier = credenciales.identifier.trim().toLowerCase();
           const encontrado = usuarios.find(
-            (u) => u.email?.toLowerCase() === credenciales.email.toLowerCase()
+            (u) => u.email?.toLowerCase() === identifier || u.nombre?.trim().toLowerCase() === identifier
           );
           if (encontrado) userId = encontrado.id;
         } catch {
@@ -38,7 +42,7 @@ export class AuthService {
         id: userId,
         nombre: response.data.nombreUsuario || payload?.unique_name || '',
         rol: response.data.rol || payload?.role || '',
-        email: payload?.email || credenciales.email,
+        email: payload?.email || credenciales.identifier,
       };
 
       localStorage.setItem('medagenda_token', response.data.token);

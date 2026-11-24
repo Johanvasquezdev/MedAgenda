@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Bot, Send, Loader2, X, MessageSquare } from "lucide-react";
+import { Send, Loader2, X, MessageSquare } from "lucide-react";
 import { ChatbotService } from "@/services/chat.service";
 import { useAuth } from "@/components/providers/AuthProvider";
 
@@ -12,7 +12,7 @@ export function GlobalChatbotWidget() {
     {
       id: "1",
       role: "bot",
-      content: "Hola, soy el asistente virtual de MedAgenda. ¿En qué puedo ayudarte hoy?",
+      content: "Hola, soy la guía de MedAgenda. Puedo explicarte cómo usar las citas, el directorio médico, los pagos y otras secciones. No puedo consultar ni cambiar datos de tu cuenta.",
     },
   ]);
   const [input, setInput] = useState("");
@@ -22,7 +22,7 @@ export function GlobalChatbotWidget() {
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
-        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+        bottomRef.current?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
       }, 100);
     }
   }, [messages, isOpen]);
@@ -35,7 +35,7 @@ export function GlobalChatbotWidget() {
     setInput("");
     setMessages(p => [...p, { id: Date.now().toString(), role: "user", content: messageToSend }]);
     setIsLoading(true);
-    
+
     try {
       const usuarioId = user?.id && user.id > 0 ? user.id : undefined;
       const res = await ChatbotService.enviarMensaje({ mensaje: messageToSend, usuarioId });
@@ -52,33 +52,35 @@ export function GlobalChatbotWidget() {
       {/* Floating Action Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-xl shadow-emerald-500/20 transition-all hover:scale-110 hover:bg-emerald-500 active:scale-95"
+        type="button"
+        aria-label={isOpen ? "Cerrar ayuda" : "Abrir ayuda y soporte"}
+        className="fixed bottom-5 right-5 z-50 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-[0_12px_30px_-14px_rgba(8,22,16,0.8)] transition-colors hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
       >
         {isOpen ? <X className="h-6 w-6" /> : <MessageSquare className="h-6 w-6" />}
       </button>
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 flex h-[500px] w-[350px] sm:w-[400px] max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-2xl shadow-black/50 animate-in slide-in-from-bottom-5 fade-in-50 backdrop-blur-xl">
+        <div className="fixed bottom-24 right-4 z-50 flex h-[min(520px,calc(100dvh-7rem))] w-[min(24rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-[0_24px_64px_-28px_rgba(0,0,0,0.7)] animate-in slide-in-from-bottom-3 fade-in-50 sm:right-6">
           {/* Header */}
-          <div className="relative overflow-hidden bg-gradient-to-br from-emerald-500/10 to-teal-500/10 p-4 border-b border-border">
-            <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-emerald-500/10 blur-2xl" />
-            <div className="relative z-10 flex items-center justify-between">
+          <div className="border-b border-border bg-card p-4">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                  <Bot className="h-5 w-5 text-emerald-500" />
+                <div className="flex size-10 items-center justify-center rounded-xl bg-accent text-accent-foreground">
+                  <MessageSquare className="size-5 text-primary" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="font-black text-sm uppercase tracking-wider text-foreground">Asistente IA</h3>
+                  <h3 className="text-sm font-semibold text-foreground">Ayuda de MedAgenda</h3>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <p className="text-[10px] text-muted-foreground font-semibold">En línea</p>
+                    <p className="text-[10px] text-muted-foreground font-semibold">Atención en línea</p>
                   </div>
                 </div>
               </div>
-              <button 
-                onClick={() => setIsOpen(false)} 
-                className="rounded-lg p-2 text-muted-foreground hover:bg-white/5 hover:text-foreground transition-colors"
+              <button
+                onClick={() => setIsOpen(false)}
+                aria-label="Cerrar ayuda"
+                className="flex size-11 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -91,7 +93,7 @@ export function GlobalChatbotWidget() {
               <div key={m.id} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                 <div className={`max-w-[85%] rounded-2xl px-4 py-3 shadow-sm text-sm ${
                   m.role === "user"
-                    ? "bg-emerald-600 text-white font-medium"
+                    ? "bg-primary text-primary-foreground font-medium"
                     : "bg-muted/50 border border-border text-foreground font-medium"
                 }`}>
                   {m.content}
@@ -102,9 +104,9 @@ export function GlobalChatbotWidget() {
               <div className="flex justify-start">
                 <div className="bg-muted/50 border border-border rounded-2xl px-4 py-3">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 bg-emerald-500/60 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-                    <span className="w-1.5 h-1.5 bg-emerald-500/60 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-                    <span className="w-1.5 h-1.5 bg-emerald-500/60 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500/60 motion-safe:animate-pulse" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500/60 motion-safe:animate-pulse [animation-delay:150ms]" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500/60 motion-safe:animate-pulse [animation-delay:300ms]" />
                   </div>
                 </div>
               </div>
@@ -125,7 +127,7 @@ export function GlobalChatbotWidget() {
               <button
                 type="submit"
                 disabled={!input.trim() || isLoading}
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-white transition-all hover:bg-emerald-500 disabled:opacity-50 active:scale-95 shadow-md shadow-emerald-500/20"
+                className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-colors hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
               </button>

@@ -26,19 +26,19 @@ const variantStyles = {
     icon: "text-emerald-600 dark:text-emerald-400"
   },
   indigo: {
-    bg: "bg-indigo-500/10 dark:bg-indigo-500/20",
-    text: "text-indigo-600 dark:text-indigo-400",
-    icon: "text-indigo-600 dark:text-indigo-400"
+    bg: "bg-emerald-500/10 dark:bg-emerald-500/20",
+    text: "text-emerald-700 dark:text-emerald-300",
+    icon: "text-emerald-700 dark:text-emerald-300"
   },
   purple: {
-    bg: "bg-purple-500/10 dark:bg-purple-500/20",
-    text: "text-purple-600 dark:text-purple-400",
-    icon: "text-purple-600 dark:text-purple-400"
+    bg: "bg-emerald-500/10 dark:bg-emerald-500/20",
+    text: "text-emerald-700 dark:text-emerald-300",
+    icon: "text-emerald-700 dark:text-emerald-300"
   },
   cyan: {
-    bg: "bg-cyan-500/10 dark:bg-cyan-500/20",
-    text: "text-cyan-600 dark:text-cyan-400",
-    icon: "text-cyan-600 dark:text-cyan-400"
+    bg: "bg-emerald-500/10 dark:bg-emerald-500/20",
+    text: "text-emerald-700 dark:text-emerald-300",
+    icon: "text-emerald-700 dark:text-emerald-300"
   },
   rose: {
     bg: "bg-rose-500/10 dark:bg-rose-500/20",

@@ -53,17 +53,15 @@ export default function UsuariosPage() {
 
   return (
     <div className="mx-auto max-w-7xl space-y-6 p-6 page-content">
-      <header className="relative overflow-hidden rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/15 via-white dark:via-slate-950 to-purple-500/15 p-6 md:p-7 shadow-sm">
-        <div className="absolute -right-16 -top-16 h-52 w-52 rounded-full bg-indigo-500/10 dark:bg-indigo-500/20 blur-3xl opacity-50" />
-        <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-purple-500/10 dark:bg-purple-500/20 blur-3xl opacity-50" />
+      <header className="rounded-2xl border border-border bg-card p-6 md:p-7 shadow-sm">
 
         <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">
               Administración
             </p>
             <h1 className="mt-2 flex items-center gap-2 text-3xl font-black tracking-tight text-foreground">
-              <Users className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
+              <Users className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
               Gestión de Usuarios
             </h1>
             <p className="mt-2 max-w-2xl text-muted-foreground font-medium">
@@ -71,7 +69,7 @@ export default function UsuariosPage() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-border bg-card/40 px-5 py-3 backdrop-blur-sm shadow-sm border-l-4 border-l-indigo-500/50">
+          <div className="rounded-2xl border border-border bg-card px-5 py-3  shadow-sm ">
             <p className="text-xs text-muted-foreground font-black uppercase tracking-widest">Registros Totales</p>
             <p className="text-2xl font-black text-foreground leading-tight">{loading ? "--" : totalUsuarios}</p>
           </div>
@@ -85,7 +83,7 @@ export default function UsuariosPage() {
           icon={Users}
           description="Registrados"
           delay={100}
-          variant="purple"
+          variant="emerald"
         />
 
         <AnimatedStatsCard
@@ -114,7 +112,7 @@ export default function UsuariosPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Buscar por nombre, email o rol"
-            className="w-full rounded-xl border border-border bg-background/50 py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-purple-500/20 transition-all outline-none"
+            className="w-full rounded-xl border border-border bg-background/50 py-2.5 pl-10 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-emerald-500/20 transition-all outline-none"
           />
         </label>
       </section>
@@ -132,7 +130,7 @@ export default function UsuariosPage() {
             {loading ? (
               <tr>
                 <td colSpan={3} className="p-8 text-center">
-                  <Loader2 className="mx-auto h-5 w-5 animate-spin text-purple-500" />
+                  <Loader2 className="mx-auto h-5 w-5 animate-spin text-emerald-500" />
                 </td>
               </tr>
             ) : usuariosFiltrados.length === 0 ? (

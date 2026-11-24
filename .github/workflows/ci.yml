@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend checks
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: SGC.Web/sgc.web.client/sgc-medagenda
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: SGC.Web/sgc.web.client/sgc-medagenda/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check TypeScript
+        run: npx tsc --noEmit
+
+      - name: Build Next.js app
+        run: npm run build
+
+  backend:
+    name: API and application tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+          cache: true
+          cache-dependency-path: |
+            SGC.API/**/*.csproj
+            SGC.ApplicationTest/**/*.csproj
+
+      - name: Restore API
+        run: dotnet restore SGC.API/SGC.API.csproj
+
+      - name: Build API
+        run: dotnet build SGC.API/SGC.API.csproj --configuration Release --no-restore
+
+      - name: Run application tests
+        run: dotnet test SGC.ApplicationTest/SGC.ApplicationTest.csproj --configuration Release

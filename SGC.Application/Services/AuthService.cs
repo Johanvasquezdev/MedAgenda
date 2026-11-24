@@ -50,7 +50,7 @@ namespace SGC.Application.Services
                 async () =>
                 {
                     var usuario = await _usuarioRepository
-                        .GetByEmailAsync(request.Email);
+                        .GetByLoginIdentifierAsync(request.Email);
 
                     if (!usuario.Activo)
                         throw new UnauthorizedAccessException(

@@ -38,17 +38,15 @@ export default function PagosAdminPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6 page-content">
-      <header className="relative overflow-hidden rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/15 via-white dark:via-slate-950 to-purple-500/15 p-6 md:p-7 shadow-sm">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-indigo-500/10 dark:bg-indigo-500/20 blur-3xl opacity-50" />
-        <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-purple-500/10 dark:bg-purple-500/20 blur-3xl opacity-50" />
+      <header className="rounded-2xl border border-border bg-card p-6 md:p-7 shadow-sm">
 
         <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">
               Administración
             </p>
             <h1 className="mt-2 flex items-center gap-2 text-3xl font-black tracking-tight text-foreground">
-              <CreditCard className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
+              <CreditCard className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
               Histórico de Pagos
             </h1>
             <p className="mt-2 max-w-2xl text-muted-foreground font-medium">
@@ -58,7 +56,7 @@ export default function PagosAdminPage() {
         </div>
       </header>
 
-      <section className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-6 shadow-sm border-l-4 border-l-indigo-500/50">
+      <section className="bg-card border border-border rounded-2xl p-6 shadow-sm ">
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-end">
           <div className="flex flex-col gap-2 w-full md:w-auto">
             <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1 flex items-center gap-2">
@@ -67,13 +65,13 @@ export default function PagosAdminPage() {
             <input
               value={pacienteId}
               onChange={(e) => setPacienteId(e.target.value)}
-              className="w-full md:w-64 px-4 py-3 rounded-xl bg-background border border-border text-foreground font-medium focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 outline-none transition-all placeholder:text-muted-foreground/30"
+              className="w-full md:w-64 px-4 py-3 rounded-xl bg-background border border-border text-foreground font-medium focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all placeholder:text-muted-foreground/30"
               placeholder="Ej: 17"
             />
           </div>
           <button
             onClick={cargarPagos}
-            className="w-full md:w-auto px-8 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black shadow-lg shadow-indigo-500/20 transition-all active:scale-95"
+            className="w-full md:w-auto px-8 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
           >
             Buscar Transacciones
           </button>
@@ -99,7 +97,7 @@ export default function PagosAdminPage() {
                 <tr>
                   <td colSpan={6} className="p-16 text-center">
                     <div className="flex flex-col items-center gap-3">
-                      <Loader2 className="animate-spin text-indigo-500 h-10 w-10" />
+                      <Loader2 className="animate-spin text-emerald-500 h-10 w-10" />
                       <span className="text-muted-foreground font-bold">Procesando consulta...</span>
                     </div>
                   </td>
@@ -122,7 +120,7 @@ export default function PagosAdminPage() {
                     </td>
                     <td className="p-4">
                       <span className={`px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border shadow-sm ${
-                        p.estado === 'Completado' 
+                        p.estado === 'Completado'
                           ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
                           : p.estado === 'Pendiente'
                           ? 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400'

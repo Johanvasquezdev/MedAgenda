@@ -108,8 +108,7 @@ export default function PagosPage() {
 
   return (
     <div className="space-y-8 page-content animate-in fade-in duration-500">
-      <header className="relative overflow-hidden rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/15 via-white dark:via-slate-950 to-teal-500/15 p-6 md:p-7 shadow-sm">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 blur-3xl opacity-50" />
+      <header className="rounded-2xl border border-border bg-card p-6 md:p-7 shadow-sm">
         <div className="relative z-10">
           <h1 className="text-3xl font-black tracking-tight text-foreground flex items-center gap-2">
             <CreditCard className="w-8 h-8 text-emerald-600 dark:text-emerald-400" />
@@ -119,7 +118,7 @@ export default function PagosPage() {
         </div>
       </header>
 
-      <div className="bg-card/50 backdrop-blur-md border border-border rounded-2xl p-4 mb-6 shadow-sm">
+      <div className="bg-card border border-border rounded-2xl p-4 mb-6 shadow-sm">
         <div className="flex flex-col md:flex-row items-center gap-4">
           <div className="relative flex-1 w-full">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -200,14 +199,14 @@ export default function PagosPage() {
                     </td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <button 
+                        <button
                           onClick={() => handleGenerateInvoice(pago, "view")}
                           className="w-9 h-9 rounded-xl bg-muted/50 hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-all border border-border"
                           title="Ver Factura"
                         >
                           <Eye className="w-4 h-4" />
                         </button>
-                        <button 
+                        <button
                           onClick={() => handleGenerateInvoice(pago, "download")}
                           className="w-9 h-9 rounded-xl bg-muted/50 hover:bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition-all border border-border"
                           title="Descargar Factura"

@@ -1,10 +1,11 @@
 "use client";
+
+import { BrandLockup } from "@/components/brand/BrandLockup";
 import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { ThreeBackground } from "@/components/animations/Threebackground";
 import anime from "animejs";
-import { Hospital, Lock, Eye, EyeOff, ArrowRight, ArrowLeft, CheckCircle, AlertTriangle } from "lucide-react";
+import { Lock, Eye, EyeOff, ArrowRight, ArrowLeft, CheckCircle, AlertTriangle } from "lucide-react";
 import axios from "axios";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:5189";
@@ -26,6 +27,12 @@ function ResetPasswordForm() {
   const logoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      if (logoRef.current) logoRef.current.style.opacity = "1";
+      if (formRef.current) formRef.current.style.opacity = "1";
+      document.querySelectorAll(".feature-item").forEach((node) => { (node as HTMLElement).style.opacity = "1"; });
+      return;
+    }
     anime({ targets: logoRef.current, translateY: [-30, 0], opacity: [0, 1], duration: 800, easing: "easeOutElastic(1, .6)" });
     anime({ targets: formRef.current, translateY: [40, 0], opacity: [0, 1], duration: 700, delay: 200, easing: "easeOutExpo" });
   }, []);
@@ -138,7 +145,7 @@ function ResetPasswordForm() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 text-sm mt-2 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25"
+              className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? (
                 <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Guardando...</>
@@ -164,16 +171,12 @@ export default function ResetPasswordPage() {
   const logoRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="min-h-screen flex relative overflow-hidden">
+    <div className="min-h-screen flex bg-transparent text-foreground">
       {/* Left Panel */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#059669]">
-        <ThreeBackground />
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-[#0b261b]/85 backdrop-blur-[1px]">
         <div className="relative z-10 flex flex-col items-center justify-center p-12 w-full">
           <div ref={logoRef} className="text-center">
-            <div className="w-24 h-24 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-6 backdrop-blur-sm border border-white/20 shadow-2xl shadow-emerald-500/20">
-              <Hospital className="w-12 h-12 text-white" />
-            </div>
-            <h1 className="text-5xl font-bold text-white mb-2 tracking-tight">MedAgenda</h1>
+            <BrandLockup markSize="lg" className="mb-6 justify-center text-3xl text-white" />
             <p className="text-base font-medium text-emerald-200 max-w-md mx-auto">
               Crea una nueva contraseña segura para proteger tu cuenta.
             </p>
@@ -182,22 +185,19 @@ export default function ResetPasswordPage() {
       </div>
 
       {/* Right Panel */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative overflow-hidden bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#059669] lg:bg-none lg:bg-background">
-        <div className="absolute inset-0 lg:hidden"><ThreeBackground /></div>
-        <div className="hidden lg:block absolute inset-0 bg-gradient-to-br pointer-events-none from-emerald-50/50 dark:from-emerald-950/20" />
-
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative overflow-hidden bg-transparent">
         <div className="w-full max-w-md relative z-10 lg:translate-y-10">
           <div className="lg:hidden text-center mb-8">
-            <h1 className="text-4xl font-bold text-white tracking-tight">MedAgenda</h1>
+            <BrandLockup markSize="sm" className="justify-center text-xl text-foreground" />
           </div>
 
-          <div ref={formRef} className="bg-card rounded-3xl shadow-2xl border border-border/50 p-8 backdrop-blur-sm">
+          <div ref={formRef} className="bg-card rounded-2xl border border-border p-6 shadow-[0_20px_55px_-35px_rgba(0,0,0,0.55)] sm:p-8 ">
             <Suspense fallback={<div className="text-center py-8 text-muted-foreground">Cargando...</div>}>
               <ResetPasswordForm />
             </Suspense>
           </div>
 
-          <p className="text-center text-xs text-white/60 lg:text-muted-foreground mt-6">MedAgenda · 2026</p>
+          <p className="mt-6 text-center text-xs text-muted-foreground">MedAgenda · 2026</p>
         </div>
       </div>
     </div>

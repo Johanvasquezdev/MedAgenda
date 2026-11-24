@@ -29,8 +29,8 @@ export function getAuthFeedback(error: ApiLikeError | undefined, mode: AuthFeedb
   }
 
   if (mode === "login") {
-    if (status === 401) return "Correo o contrasena incorrectos. Verifica tus credenciales.";
-    if (status === 404) return "No encontramos una cuenta asociada a ese correo.";
+    if (status === 401) return "Usuario, correo o contrasena incorrectos. Verifica tus credenciales.";
+    if (status === 404) return "No encontramos una cuenta asociada a ese usuario o correo.";
     if (status === 400 && normalizedMessage.includes("desactivado")) {
       return "Tu cuenta esta desactivada. Contacta al equipo de soporte.";
     }

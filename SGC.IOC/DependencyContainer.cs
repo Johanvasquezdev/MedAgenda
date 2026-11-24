@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 
 // Repositorios - Interfaces (Domain)
 using SGC.Domain.Interfaces.Repository;
@@ -44,9 +45,10 @@ namespace SGC.IOC
             // ============================================================
             // 1. DbContext con PostgreSQL via Supabase
             // ============================================================
+            var postgresConnectionString = NormalizePostgresConnectionString(
+                configuration.GetConnectionString("SGCConnection"));
             services.AddDbContext<SGCDbContext>(options =>
-                options.UseNpgsql(
-                    configuration.GetConnectionString("SGCConnection")));
+                options.UseNpgsql(postgresConnectionString));
 
             // ============================================================
             // 2. Repositorios (Persistence -> Domain interfaces)
@@ -114,6 +116,30 @@ namespace SGC.IOC
             services.AddScoped<IPagoService, PagoService>();
 
             return services;
+        }
+
+        private static string? NormalizePostgresConnectionString(string? connectionString)
+        {
+            if (string.IsNullOrWhiteSpace(connectionString) ||
+                !Uri.TryCreate(connectionString, UriKind.Absolute, out var uri) ||
+                (uri.Scheme != "postgres" && uri.Scheme != "postgresql"))
+            {
+                return connectionString;
+            }
+
+            var credentials = uri.UserInfo.Split(':', 2);
+            if (credentials.Length != 2)
+                return connectionString;
+
+            return new NpgsqlConnectionStringBuilder
+            {
+                Host = uri.Host,
+                Port = uri.IsDefaultPort ? 5432 : uri.Port,
+                Database = Uri.UnescapeDataString(uri.AbsolutePath.TrimStart('/')),
+                Username = Uri.UnescapeDataString(credentials[0]),
+                Password = Uri.UnescapeDataString(credentials[1]),
+                SslMode = SslMode.Require,
+            }.ConnectionString;
         }
     }
 }

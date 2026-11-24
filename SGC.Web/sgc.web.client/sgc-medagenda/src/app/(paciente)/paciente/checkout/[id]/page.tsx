@@ -26,9 +26,9 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
       toast.error("Por favor completa los campos obligatorios de la tarjeta");
       return;
     }
-    
+
     setLoading(true);
-    
+
     // Animate button
     anime({
       targets: '.checkout-btn',
@@ -74,22 +74,22 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
           {/* Right Panel - Checkout Form (Main interaction) */}
           <div className="flex-1 order-2 lg:order-1">
             <form onSubmit={handleCheckout} className="space-y-6">
-              
+
               {/* Información Personal */}
               <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-foreground mb-4">Información de Facturación</h2>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1.5">Nombre Completo</label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         required
                         value={nombre}
                         onChange={(e) => setNombre(e.target.value)}
-                        placeholder="Como aparece en la tarjeta" 
+                        placeholder="Como aparece en la tarjeta"
                         className="w-full pl-10 pr-4 py-2.5 bg-secondary border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all placeholder:text-muted-foreground/50"
                       />
                     </div>
@@ -100,12 +100,12 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
                       <label className="block text-sm font-medium text-foreground mb-1.5">Correo Electrónico</label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <input 
-                          type="email" 
+                        <input
+                          type="email"
                           required
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
-                          placeholder="tu@email.com" 
+                          placeholder="tu@email.com"
                           className="w-full pl-10 pr-4 py-2.5 bg-secondary border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all placeholder:text-muted-foreground/50"
                         />
                       </div>
@@ -114,11 +114,11 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
                       <label className="block text-sm font-medium text-foreground mb-1.5">Dirección</label>
                       <div className="relative">
                         <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           value={direccion}
                           onChange={(e) => setDireccion(e.target.value)}
-                          placeholder="Calle, Número" 
+                          placeholder="Calle, Número"
                           className="w-full pl-10 pr-4 py-2.5 bg-secondary border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all placeholder:text-muted-foreground/50"
                         />
                       </div>
@@ -137,18 +137,18 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1.5">Número de Tarjeta</label>
                     <div className="relative">
                       <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         required
                         value={tarjeta}
                         onChange={handleCardChange}
-                        placeholder="0000 0000 0000 0000" 
+                        placeholder="0000 0000 0000 0000"
                         className="w-full pl-10 pr-4 py-2.5 bg-secondary border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all placeholder:text-muted-foreground/50 font-mono"
                       />
                     </div>
@@ -157,24 +157,24 @@ export default function CheckoutPage({ params }: { params: Promise<{ id: string 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-1.5">Expiración</label>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         required
                         value={expiracion}
                         onChange={handleExpChange}
-                        placeholder="MM/YY" 
+                        placeholder="MM/YY"
                         maxLength={5}
                         className="w-full px-4 py-2.5 bg-secondary border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all placeholder:text-muted-foreground/50 text-center font-mono"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-foreground mb-1.5">CVC</label>
-                      <input 
-                        type="password" 
+                      <input
+                        type="password"
                         required
                         value={cvc}
                         onChange={(e) => setCvc(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                        placeholder="123" 
+                        placeholder="123"
                         maxLength={4}
                         className="w-full px-4 py-2.5 bg-secondary border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all placeholder:text-muted-foreground/50 text-center font-mono"
                       />

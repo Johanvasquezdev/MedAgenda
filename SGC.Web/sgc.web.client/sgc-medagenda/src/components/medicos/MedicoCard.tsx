@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Star, MapPin, Clock, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { MedicoDTO } from "@/types/medico.types";
 
@@ -9,58 +9,48 @@ interface MedicoCardProps {
   onAgendarClick: (medico: MedicoDTO) => void;
 }
 
+function getInitials(name: string) {
+  return name.trim().split(/\s+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase() || "M";
+}
+
 export function MedicoCard({ medico, onAgendarClick }: MedicoCardProps) {
-  const fallbackUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(medico.nombre)}&background=10b981&color=fff`;
-  const [imgSrc, setImgSrc] = useState(medico.foto || fallbackUrl);
+  const [imgSrc, setImgSrc] = useState(medico.foto || "");
 
   return (
-    <div className="group bg-card rounded-2xl p-6 shadow-sm hover:shadow-md transition-all border border-border flex flex-col h-full">
-      <div className="flex items-start gap-4">
-        <Image
-          src={imgSrc}
-          alt={`Foto de ${medico.nombre}`}
-          width={64}
-          height={64}
-          unoptimized
-          onError={() => setImgSrc(fallbackUrl)}
-          className="w-16 h-16 rounded-full object-cover border-2 border-emerald-200 dark:border-emerald-900"
-        />
-        <div>
-          <h3 className="font-semibold text-lg text-foreground group-hover:text-emerald-500 transition-colors">
-            {medico.nombre}
-          </h3>
-          <p className="text-emerald-600 dark:text-emerald-400 text-sm font-medium">
-            {medico.especialidadNombre || "Especialista"}
-          </p>
-          <div className="flex items-center gap-1 text-muted-foreground mt-1 text-sm">
-            <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
-            <span>4.9 (120 reseñas)</span>
-          </div>
-        </div>
-      </div>
-      
-      <div className="mt-6 pt-4 border-t border-border flex-1 space-y-2">
-        <div className="flex items-center gap-2 text-muted-foreground text-sm">
-          <MapPin className="w-4 h-4 text-muted-foreground" />
-          Centro Médico Principal
-        </div>
-        <div className="flex items-center gap-2 text-muted-foreground text-sm">
-          <Clock className="w-4 h-4 text-muted-foreground" />
-          Disponible mañana
+    <article className="group flex h-full flex-col rounded-2xl border border-border bg-card p-5 shadow-sm transition-shadow hover:shadow-[0_14px_34px_-28px_rgba(8,22,16,0.7)] sm:p-6">
+      <div className="flex items-center gap-4">
+        {imgSrc ? (
+          <Image
+            src={imgSrc}
+            alt={`Foto de ${medico.nombre}`}
+            width={64}
+            height={64}
+            unoptimized
+            onError={() => setImgSrc("")}
+            className="size-16 shrink-0 rounded-2xl border border-border object-cover"
+          />
+        ) : (
+          <span aria-hidden="true" className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-accent text-lg font-semibold text-accent-foreground">
+            {getInitials(medico.nombre)}
+          </span>
+        )}
+        <div className="min-w-0">
+          <h3 className="truncate text-lg font-semibold text-foreground transition-colors group-hover:text-primary">{medico.nombre}</h3>
+          <p className="mt-1 truncate text-sm font-medium text-muted-foreground">{medico.especialidadNombre || "Especialista"}</p>
         </div>
       </div>
 
-      <div className="mt-6 flex gap-3">
-        <button 
-          onClick={() => onAgendarClick(medico)}
-          className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-medium transition-colors shadow-sm shadow-emerald-500/20 flex justify-center items-center gap-2"
-        >
-          Agendar <ArrowRight className="w-4 h-4" />
-        </button>
-        <button className="px-4 py-2.5 rounded-xl font-medium text-foreground bg-secondary hover:bg-secondary/80 transition-colors">
-          Perfil
-        </button>
+      <div className="mt-6 flex-1 border-t border-border pt-4">
+        <p className="text-sm leading-6 text-muted-foreground">Consulta la disponibilidad y elige el horario que mejor se adapte a tu día.</p>
       </div>
-    </div>
+
+      <button
+        type="button"
+        onClick={() => onAgendarClick(medico)}
+        className="mt-5 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-primary-foreground transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+      >
+        Agendar cita <ArrowRight className="size-4" aria-hidden="true" />
+      </button>
+    </article>
   );
 }

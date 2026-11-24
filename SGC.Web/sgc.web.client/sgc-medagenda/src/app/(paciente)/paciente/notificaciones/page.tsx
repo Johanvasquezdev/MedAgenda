@@ -1,30 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bell, CalendarClock, CreditCard, Info, CheckCircle } from "lucide-react";
+import { Bell, CheckCircle } from "lucide-react";
 import dayjs from "dayjs";
 import { NotificacionResponse } from "@/types/api.types";
 import { NotificacionService } from "@/services/notificacion.service";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { usePageTransition } from "@/components/animations/Animatedcomponents";
+import { NotificacionCard } from "@/components/notificaciones/NotificacionCard";
 
 const filterTabs = ["Todas", "No leídas", "Leídas"];
-
-function getIcon(tipo: string) {
-  switch (tipo?.toLowerCase()) {
-    case "email": return <CalendarClock className="w-5 h-5" />;
-    case "sms": return <CreditCard className="w-5 h-5" />;
-    default: return <Info className="w-5 h-5" />;
-  }
-}
-
-function getIconColor(tipo: string) {
-  switch (tipo?.toLowerCase()) {
-    case "email": return "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400";
-    case "sms": return "bg-amber-500/10 text-amber-600 dark:text-amber-400";
-    default: return "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400";
-  }
-}
 
 export default function NotificacionesPage() {
   const { user } = useAuth();
@@ -65,8 +50,7 @@ export default function NotificacionesPage() {
 
   return (
     <div className="space-y-8 page-content animate-in fade-in duration-500">
-      <header className="relative overflow-hidden rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/15 via-white dark:via-slate-950 to-teal-500/15 p-6 md:p-7 shadow-sm">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 blur-3xl opacity-50" />
+      <header className="rounded-2xl border border-border bg-card p-6 md:p-7 shadow-sm">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-3">
@@ -112,49 +96,25 @@ export default function NotificacionesPage() {
 
       <div className="space-y-3">
         {loading ? (
-          <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl p-12 text-center">
-            <p className="text-white/60">Cargando notificaciones...</p>
+          <div className="rounded-2xl border border-border bg-card p-12 text-center">
+            <p className="text-muted-foreground">Cargando notificaciones...</p>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl p-12 text-center">
-            <Bell className="w-12 h-12 text-white/20 mx-auto mb-4" />
-            <p className="text-white/60">No tienes notificaciones.</p>
+          <div className="rounded-2xl border border-border bg-card p-12 text-center">
+            <Bell className="mx-auto mb-4 size-12 text-muted-foreground" />
+            <p className="text-muted-foreground">No tienes notificaciones.</p>
           </div>
         ) : (
           filtered.map(n => (
-            <div
+            <NotificacionCard
               key={n.id}
+              tipo={n.tipo}
+              titulo={n.tipo}
+              mensaje={n.mensaje}
+              fecha={dayjs(n.fechaEnvio).format("DD MMM, HH:mm")}
+              leida={n.leida}
               onClick={() => marcarComoLeida(n.id)}
-              className={`bg-card border rounded-2xl p-5 cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5 shadow-sm group ${
-                n.leida
-                  ? "border-border/50 opacity-80"
-                  : "border-emerald-500/30 p-5 bg-gradient-to-r from-emerald-500/5 to-transparent"
-              }`}
-            >
-              <div className="flex items-start gap-5">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform ${getIconColor(n.tipo)}`}>
-                  {getIcon(n.tipo)}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className={`font-black text-lg ${n.leida ? "text-muted-foreground" : "text-foreground"}`}>
-                        {n.tipo}
-                      </h3>
-                      <p className={`text-sm mt-1 font-medium leading-relaxed ${n.leida ? "text-muted-foreground/70" : "text-foreground"}`}>
-                        {n.mensaje}
-                      </p>
-                    </div>
-                    {!n.leida && <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-2 animate-pulse" />}
-                  </div>
-                  <div className="flex items-center gap-2 mt-3 p-1.5 bg-muted/30 rounded-lg w-fit border border-border/50">
-                    <span className="text-muted-foreground text-[10px] font-black uppercase tracking-widest leading-none">
-                      {dayjs(n.fechaEnvio).format("DD MMM, HH:mm")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            />
           ))
         )}
       </div>

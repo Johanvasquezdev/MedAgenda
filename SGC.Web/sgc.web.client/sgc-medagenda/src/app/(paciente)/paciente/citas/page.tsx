@@ -102,8 +102,7 @@ export default function MisCitasPage() {
 
   return (
     <div className="space-y-6 page-content animate-in fade-in duration-500">
-      <header className="relative overflow-hidden rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/15 via-white dark:via-slate-950 to-teal-500/15 p-6 md:p-7 shadow-sm">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 blur-3xl opacity-50" />
+      <header className="rounded-2xl border border-border bg-card p-6 md:p-7 shadow-sm">
         <div className="relative z-10">
           <h1 className="text-3xl font-black tracking-tight text-foreground flex items-center gap-2">
             <Calendar className="h-7 w-7 text-emerald-600 dark:text-emerald-400" />

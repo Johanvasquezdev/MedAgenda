@@ -1,11 +1,13 @@
 "use client";
 
+import { BrandLockup } from "@/components/brand/BrandLockup";
+import { ProviderLogo } from "@/components/brand/ProviderLogo";
+
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import anime from "animejs";
 import PhoneInput from "react-phone-number-input/input";
-import { ThreeBackground } from "@/components/animations/Threebackground";
 import { getAuthFeedback } from "@/lib/auth-feedback";
 import { PacienteService } from "@/services/paciente.service";
 import { toast } from "sonner";
@@ -21,13 +23,11 @@ import {
   EyeOff,
   FileText,
   HeartPulse,
-  Hospital,
   Loader2,
   Lock,
   Mail,
   Phone,
   ShieldCheck,
-  Sparkles,
   Stethoscope,
   User,
 } from "lucide-react";
@@ -36,8 +36,6 @@ type SeguroOption = {
   value: string;
   label: string;
   prefix: string;
-  accent: string;
-  icon: typeof ShieldCheck;
 };
 
 type FormData = {
@@ -73,36 +71,26 @@ const seguroOptions: SeguroOption[] = [
     value: "ars-humano",
     label: "ARS Humano",
     prefix: "HUM",
-    accent: "from-sky-500/20 to-cyan-500/20 text-sky-200 border-sky-400/30",
-    icon: HeartPulse,
   },
   {
     value: "ars-universal",
     label: "ARS Universal",
     prefix: "UNI",
-    accent: "from-violet-500/20 to-indigo-500/20 text-violet-200 border-violet-400/30",
-    icon: Sparkles,
   },
   {
     value: "ars-senasa",
-    label: "SENASA",
+    label: "SeNaSa",
     prefix: "SEN",
-    accent: "from-emerald-500/20 to-teal-500/20 text-emerald-200 border-emerald-400/30",
-    icon: ShieldCheck,
   },
   {
     value: "ars-reservas",
     label: "ARS Reservas",
     prefix: "ARS",
-    accent: "from-amber-500/20 to-orange-500/20 text-amber-200 border-amber-400/30",
-    icon: Building2,
   },
   {
     value: "privado",
     label: "Seguro Privado",
     prefix: "PRI",
-    accent: "from-rose-500/20 to-fuchsia-500/20 text-rose-200 border-rose-400/30",
-    icon: CreditCard,
   },
 ];
 
@@ -170,6 +158,12 @@ export default function RegistroPage() {
   const seguroMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      if (logoRef.current) logoRef.current.style.opacity = "1";
+      if (formRef.current) formRef.current.style.opacity = "1";
+      document.querySelectorAll(".feature-item").forEach((node) => { (node as HTMLElement).style.opacity = "1"; });
+      return;
+    }
     anime({
       targets: logoRef.current,
       translateY: [-30, 0],
@@ -349,16 +343,12 @@ export default function RegistroPage() {
     errors[field] ? <p className="mt-1.5 text-xs text-rose-400">{errors[field]}</p> : null;
 
   return (
-    <div className="min-h-screen flex relative overflow-hidden bg-[#0a0f1e] lg:bg-background">
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#059669]">
-        <ThreeBackground />
+    <div className="min-h-screen flex bg-transparent text-foreground">
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-[#0b261b]/85 backdrop-blur-[1px]">
 
         <div className="relative z-10 flex flex-col items-center justify-center p-12 w-full">
           <div ref={logoRef} className="text-center" style={{ opacity: 0 }}>
-            <div className="w-24 h-24 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-6 backdrop-blur-sm border border-white/20 shadow-2xl shadow-emerald-500/20">
-              <Hospital className="w-12 h-12 text-white" />
-            </div>
-            <h1 className="text-5xl font-bold text-white mb-2 tracking-tight">MedAgenda</h1>
+            <BrandLockup markSize="lg" className="mb-6 justify-center text-3xl text-white" />
             <p className="text-emerald-200 text-base font-medium max-w-md mx-auto mb-12">
               Gestiona y organiza tus citas médicas en un solo lugar, de forma rápida, segura e inteligente.
             </p>
@@ -366,14 +356,14 @@ export default function RegistroPage() {
 
           <div className="space-y-4 w-full max-w-xs">
             {[
-              { icon: <Sparkles className="w-6 h-6 text-white/95" />, text: "Acceso inmediato al portal" },
+              { icon: <Calendar className="w-6 h-6 text-white/95" />, text: "Acceso inmediato al portal" },
               { icon: <Calendar className="w-6 h-6 text-white/95" />, text: "Gestión unificada de citas" },
               { icon: <Stethoscope className="w-6 h-6 text-white/95" />, text: "Directorio de especialistas" },
               { icon: <HeartPulse className="w-6 h-6 text-white/95" />, text: "Historial médico asegurado" },
             ].map((item, i) => (
               <div
                 key={i}
-                className="feature-item flex items-center gap-3 bg-white/10 rounded-2xl px-5 py-3.5 backdrop-blur-sm border border-white/10 hover:bg-white/15 transition-colors duration-200"
+                className="feature-item flex items-center gap-3 bg-white/10 rounded-2xl px-5 py-3.5 border border-white/10 hover:bg-white/15 transition-colors duration-200"
                 style={{ opacity: 0 }}
               >
                 {item.icon}
@@ -384,27 +374,16 @@ export default function RegistroPage() {
         </div>
       </div>
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative overflow-y-auto bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#059669] lg:bg-none lg:bg-background">
-        <div className="absolute inset-0 lg:hidden z-0">
-          <div className="fixed inset-0 pointer-events-none">
-            <ThreeBackground />
-          </div>
-        </div>
-
-        <div className="hidden lg:block absolute inset-0 bg-gradient-to-br from-emerald-50/50 to-transparent dark:from-emerald-950/20 pointer-events-none" />
-
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative overflow-y-auto bg-transparent">
         <div className="w-full max-w-md relative z-10 my-8 lg:translate-y-10">
           <div className="lg:hidden text-center mb-8">
-            <div className="w-16 h-16 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-4 backdrop-blur-sm border border-white/20 shadow-xl shadow-emerald-500/20">
-              <Hospital className="w-8 h-8 text-white" />
-            </div>
-            <h1 className="text-3xl font-bold text-white">MedAgenda</h1>
-            <p className="text-emerald-100/80 text-xs mt-2 max-w-[280px] mx-auto text-center">
+            <BrandLockup markSize="sm" className="justify-center text-2xl text-foreground" />
+            <p className="mt-3 max-w-[280px] mx-auto text-center text-sm leading-6 text-muted-foreground">
               Gestiona y organiza tus citas médicas en un solo lugar, de forma rápida, segura e inteligente.
             </p>
           </div>
 
-          <div ref={formRef} className="bg-card rounded-3xl shadow-2xl border border-border/50 p-8 backdrop-blur-sm" style={{ opacity: 0 }}>
+          <div ref={formRef} className="bg-card rounded-2xl border border-border p-6 shadow-[0_20px_55px_-35px_rgba(0,0,0,0.55)] sm:p-8 " style={{ opacity: 0 }}>
             {isSuccess ? (
               <div className="text-center py-6">
                 <div className="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -558,7 +537,7 @@ export default function RegistroPage() {
                       <button
                         type="button"
                         onClick={handleNextStep}
-                        className="w-full bg-gradient-to-r from-emerald-500 to-emerald-500 hover:from-emerald-600 hover:to-emerald-600 text-white font-semibold py-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 mt-6"
+                        className="mt-6 flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 font-semibold text-primary-foreground transition hover:brightness-110"
                       >
                         Continuar <ArrowRight className="w-4 h-4" />
                       </button>
@@ -623,9 +602,9 @@ export default function RegistroPage() {
                         >
                           {selectedSeguro ? (
                             <span className="flex items-center gap-3">
-                              <span className={`flex h-10 w-10 items-center justify-center rounded-xl border bg-gradient-to-br ${selectedSeguro.accent}`}>
-                                <selectedSeguro.icon className="h-4 w-4" />
-                              </span>
+                              {selectedSeguro.value === "privado" ? (
+                                <span aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground"><CreditCard className="size-4" /></span>
+                              ) : <ProviderLogo name={selectedSeguro.label} className="[&>span:first-child]:size-10 [&>span:last-child]:hidden" />}
                               <span className="flex flex-col">
                                 <span className="font-medium text-foreground">{selectedSeguro.label}</span>
                                 <span className="text-xs text-muted-foreground">Prefijo automático: {selectedSeguro.prefix}</span>
@@ -639,7 +618,7 @@ export default function RegistroPage() {
                         {renderFieldError("tipoSeguro")}
 
                         {showSeguroOptions ? (
-                          <div className="mt-2 rounded-2xl border border-border bg-card/95 p-2 backdrop-blur-xl shadow-2xl">
+                          <div className="mt-2 rounded-2xl border border-border bg-card/95 p-2  shadow-2xl">
                             {seguroOptions.map((option) => (
                               <button
                                 key={option.value}
@@ -652,9 +631,9 @@ export default function RegistroPage() {
                                 className="w-full rounded-xl px-3 py-2.5 text-left hover:bg-secondary/70 transition-colors"
                               >
                                 <span className="flex items-center gap-3">
-                                  <span className={`flex h-10 w-10 items-center justify-center rounded-xl border bg-gradient-to-br ${option.accent}`}>
-                                    <option.icon className="h-4 w-4" />
-                                  </span>
+                                  {option.value === "privado" ? (
+                                    <span aria-hidden="true" className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground"><CreditCard className="size-4" /></span>
+                                  ) : <ProviderLogo name={option.label} className="[&>span:first-child]:size-10 [&>span:last-child]:hidden" />}
                                   <span className="flex flex-col">
                                     <span className="font-medium text-foreground">{option.label}</span>
                                     <span className="text-xs text-muted-foreground">{option.prefix} · número de afiliación</span>
@@ -701,7 +680,7 @@ export default function RegistroPage() {
                         <button
                           type="submit"
                           disabled={isLoading}
-                          className="submit-btn flex-[2] bg-gradient-to-r from-emerald-500 to-emerald-500 hover:from-emerald-600 hover:to-emerald-600 text-white font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25 disabled:opacity-70 disabled:cursor-not-allowed"
+                          className="submit-btn flex min-h-11 flex-[2] items-center justify-center gap-2 rounded-xl bg-primary py-3 font-semibold text-primary-foreground transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
                         >
                           {isLoading ? (
                             <>
@@ -732,10 +711,9 @@ export default function RegistroPage() {
             )}
           </div>
 
-          <p className="text-center text-xs text-white/60 lg:text-muted-foreground mt-6">MedAgenda · 2026</p>
+          <p className="mt-6 text-center text-xs text-muted-foreground">MedAgenda · 2026</p>
         </div>
       </div>
     </div>
   );
 }
-

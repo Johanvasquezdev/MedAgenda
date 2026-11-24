@@ -29,7 +29,7 @@ namespace SGC.Application.Services
                 async () =>
                 {
                     var respuesta = await _chatbotService
-                        .EnviarMensajeAsync(request.Mensaje, request.Contexto);
+                        .EnviarMensajeAsync(request.Mensaje);
 
                     return new ChatResponse
                     {

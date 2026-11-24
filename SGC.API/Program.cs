@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using SGC.API.Middleware;
+using SGC.API.Seeding;
 using SGC.IOC;
 using SGC.Infraestructure.SignalR.Hubs;
 using Microsoft.AspNetCore.RateLimiting;
@@ -195,6 +196,15 @@ builder.Services.AddRateLimiter(options =>
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment() &&
+    app.Configuration.GetValue("DemoSeed:Enabled", true))
+{
+    await DemoDataSeeder.SeedAsync(
+        app.Services,
+        app.Configuration,
+        app.Logger);
+}
 
 // ============================================================
 // Pipeline de middleware

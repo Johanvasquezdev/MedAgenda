@@ -26,3 +26,6 @@ services:
       AI__ApiKey: "${SGC_AI_API_KEY}"
       AI__MaxTokens: "${SGC_AI_MAX_TOKENS:-1000}"
       AI__Temperature: "${SGC_AI_TEMPERATURE:-0.2}"
+      Brevo__ApiKey: "${SGC_BREVO_API_KEY}"
+      Brevo__SenderEmail: "${SGC_BREVO_SENDER_EMAIL}"
+      Brevo__SenderName: "${SGC_BREVO_SENDER_NAME:-MedAgenda}"

@@ -1,12 +1,12 @@
 "use client";
 
+import { BrandLockup } from "@/components/brand/BrandLockup";
+
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import anime from "animejs";
-import { AlertTriangle, ArrowLeft, ArrowRight, CheckCircle, Home, Hospital, Mail } from "lucide-react";
-import { ThreeBackground } from "@/components/animations/Threebackground";
-
+import { AlertTriangle, ArrowLeft, ArrowRight, CheckCircle, Home, Mail } from "lucide-react";
 const API =
   process.env.NEXT_PUBLIC_API_BASE_URL?.trim() ||
   process.env.NEXT_PUBLIC_API_URL?.trim() ||
@@ -21,6 +21,12 @@ export default function ForgotPasswordPage() {
   const logoRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      if (logoRef.current) logoRef.current.style.opacity = "1";
+      if (formRef.current) formRef.current.style.opacity = "1";
+      document.querySelectorAll(".feature-item").forEach((node) => { (node as HTMLElement).style.opacity = "1"; });
+      return;
+    }
     anime({
       targets: logoRef.current,
       translateY: [-30, 0],
@@ -59,15 +65,11 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex relative overflow-hidden">
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#059669]">
-        <ThreeBackground />
+    <div className="min-h-screen flex bg-transparent text-foreground">
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-[#0b261b]/85 backdrop-blur-[1px]">
         <div className="relative z-10 flex flex-col items-center justify-center p-12 w-full">
           <div ref={logoRef} className="text-center" style={{ opacity: 0 }}>
-            <div className="w-24 h-24 bg-white/10 rounded-3xl flex items-center justify-center mx-auto mb-6 backdrop-blur-sm border border-white/20 shadow-2xl shadow-emerald-500/20">
-              <Hospital className="w-12 h-12 text-white" />
-            </div>
-            <h1 className="text-5xl font-bold text-white mb-2 tracking-tight">MedAgenda</h1>
+            <BrandLockup markSize="lg" className="mb-6 justify-center text-3xl text-white" />
             <p className="text-base font-medium text-emerald-200 max-w-md mx-auto">
               Recupera el acceso a tu cuenta de forma segura y vuelve al portal cuando quieras.
             </p>
@@ -75,18 +77,13 @@ export default function ForgotPasswordPage() {
         </div>
       </div>
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative overflow-hidden bg-gradient-to-br from-[#064e3b] via-[#065f46] to-[#059669] lg:bg-none lg:bg-background">
-        <div className="absolute inset-0 lg:hidden">
-          <ThreeBackground />
-        </div>
-        <div className="hidden lg:block absolute inset-0 bg-gradient-to-br pointer-events-none from-emerald-50/50 dark:from-emerald-950/20" />
-
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 relative overflow-hidden bg-transparent">
         <div className="w-full max-w-md relative z-10 lg:translate-y-10">
           <div className="lg:hidden text-center mb-8">
-            <h1 className="text-4xl font-bold text-white tracking-tight">MedAgenda</h1>
+            <BrandLockup markSize="sm" className="justify-center text-xl text-foreground" />
           </div>
 
-          <div ref={formRef} className="bg-card rounded-3xl shadow-2xl border border-border/50 p-8 backdrop-blur-sm" style={{ opacity: 0 }}>
+          <div ref={formRef} className="bg-card rounded-2xl border border-border p-6 shadow-[0_20px_55px_-35px_rgba(0,0,0,0.55)] sm:p-8 " style={{ opacity: 0 }}>
             {sent ? (
               <div className="text-center py-4">
                 <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -143,7 +140,7 @@ export default function ForgotPasswordPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 text-sm mt-2 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/25"
+                    className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-semibold text-primary-foreground transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {loading ? (
                       <>
@@ -172,7 +169,7 @@ export default function ForgotPasswordPage() {
             )}
           </div>
 
-          <p className="text-center text-xs text-white/60 lg:text-muted-foreground mt-6">MedAgenda · 2026</p>
+          <p className="mt-6 text-center text-xs text-muted-foreground">MedAgenda · 2026</p>
         </div>
       </div>
     </div>

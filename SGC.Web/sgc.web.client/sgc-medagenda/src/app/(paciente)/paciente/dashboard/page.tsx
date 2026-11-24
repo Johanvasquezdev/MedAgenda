@@ -96,10 +96,8 @@ export default function PacienteDashboard() {
 
   return (
     <div className="space-y-8 page-content animate-in fade-in duration-500">
-      <header className="relative overflow-hidden rounded-3xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/15 via-white dark:via-slate-950 to-teal-500/15 p-6 md:p-8 shadow-sm">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-emerald-500/10 dark:bg-emerald-500/20 blur-3xl opacity-50" />
-        <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-teal-500/10 dark:bg-teal-500/20 blur-3xl opacity-50" />
-        
+      <header className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
+
         <div className="relative z-10">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400 mb-2">
             Panel de Control

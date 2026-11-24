@@ -143,17 +143,15 @@ export default function AdminMedicosPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto space-y-6 page-content">
-      <header className="relative overflow-hidden rounded-3xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/15 via-white dark:via-slate-950 to-purple-500/15 p-6 md:p-7 shadow-sm">
-        <div className="absolute -right-16 -top-20 h-56 w-56 rounded-full bg-indigo-500/10 dark:bg-indigo-500/20 blur-3xl opacity-50" />
-        <div className="absolute -bottom-20 -left-20 h-56 w-56 rounded-full bg-purple-500/10 dark:bg-purple-500/20 blur-3xl opacity-50" />
+      <header className="rounded-2xl border border-border bg-card p-6 md:p-7 shadow-sm">
 
         <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.2em] text-indigo-600 dark:text-indigo-400">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-emerald-600 dark:text-emerald-400">
               Administración
             </p>
             <h1 className="mt-2 flex items-center gap-2 text-3xl font-black tracking-tight text-foreground">
-              <Stethoscope className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
+              <Stethoscope className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
               Directorio de Médicos
             </h1>
             <p className="mt-2 max-w-2xl text-muted-foreground font-medium">
@@ -164,7 +162,7 @@ export default function AdminMedicosPage() {
           <button
             type="button"
             onClick={abrirCrear}
-            className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-indigo-500/20 active:scale-95"
+            className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 px-5 py-2.5 text-sm font-bold text-white transition-all shadow-lg shadow-emerald-500/20 active:scale-95"
           >
             <Plus aria-hidden="true" className="h-4 w-4" /> Registrar médico
           </button>
@@ -197,16 +195,16 @@ export default function AdminMedicosPage() {
         />
       </section>
 
-      <AnimatedCard delay={400} className="bg-card/50 backdrop-blur-sm rounded-2xl shadow-sm border border-border overflow-hidden">
+      <AnimatedCard delay={400} className="bg-card/50  rounded-2xl shadow-sm border border-border overflow-hidden">
         <div className="p-4 border-b border-border flex flex-col gap-3 bg-muted/20 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative w-full max-w-sm">
             <Search aria-hidden="true" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <input 
+            <input
               id="medicos-busqueda"
               aria-label="Buscar medicos"
               type="text"
               placeholder="Buscar por nombre, especialidad, exequatur o email"
-              className="w-full pl-9 pr-4 py-2 rounded-lg border border-border bg-background text-sm focus:ring-2 focus:ring-purple-500/20 outline-none transition-all text-foreground placeholder:text-muted-foreground"
+              className="w-full pl-9 pr-4 py-2 rounded-lg border border-border bg-background text-sm focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-foreground placeholder:text-muted-foreground"
               value={busqueda}
               onChange={(e) => setBusqueda(e.target.value)}
             />
@@ -231,7 +229,7 @@ export default function AdminMedicosPage() {
               {isLoading ? (
                 <tr>
                   <td colSpan={5} className="px-6 py-12 text-center">
-                    <Loader2 className="w-6 h-6 animate-spin text-indigo-400 mx-auto" />
+                    <Loader2 className="w-6 h-6 animate-spin text-emerald-400 mx-auto" />
                     <p className="text-slate-400 mt-2">Cargando directorio...</p>
                   </td>
                 </tr>
@@ -275,8 +273,8 @@ export default function AdminMedicosPage() {
                     </td>
                     <td className="px-6 py-4 text-center">
                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border shadow-sm ${
-                          medico.activo 
-                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400' 
+                          medico.activo
+                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-600 dark:text-emerald-400'
                             : 'bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-400'
                         }`}>
                         {medico.activo ? <CheckCircle2 className="w-3.5 h-3.5" /> : <XCircle className="w-3.5 h-3.5" />}
@@ -314,7 +312,7 @@ export default function AdminMedicosPage() {
       </AnimatedCard>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-md p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80  p-4">
           <div className="w-full max-w-lg bg-card border border-border rounded-2xl overflow-hidden shadow-2xl scale-in-center">
             <div className="flex items-center justify-between px-5 py-4 border-b border-border bg-muted/30">
               <h2 className="text-xl font-black text-foreground">
@@ -332,7 +330,7 @@ export default function AdminMedicosPage() {
                     aria-label="Nombre completo"
                     required
                     placeholder="Ej. Dr. Juan Pérez"
-                    className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                     value={formData.nombre}
                     onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                   />
@@ -344,7 +342,7 @@ export default function AdminMedicosPage() {
                     required
                     type="email"
                     placeholder="medico@ejemplo.com"
-                    className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   />
@@ -357,7 +355,7 @@ export default function AdminMedicosPage() {
                       required
                       type="password"
                       placeholder="••••••••"
-                      className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     />
@@ -369,7 +367,7 @@ export default function AdminMedicosPage() {
                     <input
                       aria-label="Exequatur"
                       placeholder="000000"
-                      className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                       value={formData.exequatur || ""}
                       onChange={(e) => setFormData({ ...formData, exequatur: e.target.value })}
                     />
@@ -379,7 +377,7 @@ export default function AdminMedicosPage() {
                     <input
                       aria-label="Telefono de consultorio"
                       placeholder="809-000-0000"
-                      className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                       value={formData.telefonoConsultorio || ""}
                       onChange={(e) => setFormData({ ...formData, telefonoConsultorio: e.target.value })}
                     />
@@ -390,7 +388,7 @@ export default function AdminMedicosPage() {
                     <label className="text-xs font-bold text-muted-foreground uppercase ml-1">Especialidad</label>
                     <select
                       aria-label="Seleccionar especialidad"
-                      className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                       value={formData.especialidadId ?? ""}
                       onChange={(e) =>
                         setFormData({ ...formData, especialidadId: e.target.value ? Number(e.target.value) : null })
@@ -408,7 +406,7 @@ export default function AdminMedicosPage() {
                     <label className="text-xs font-bold text-muted-foreground uppercase ml-1">Proveedor (ARS)</label>
                     <select
                       aria-label="Seleccionar proveedor de salud"
-                      className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground focus:ring-2 focus:ring-purple-500/20 outline-none transition-all"
+                      className="w-full px-4 py-2.5 rounded-xl bg-background border border-border text-foreground focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all"
                       value={formData.proveedorSaludId ?? ""}
                       onChange={(e) =>
                         setFormData({ ...formData, proveedorSaludId: e.target.value ? Number(e.target.value) : null })
@@ -435,7 +433,7 @@ export default function AdminMedicosPage() {
                 </button>
                 <button
                   type="submit"
-                  className="px-8 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-black shadow-lg shadow-indigo-500/20 transition-all active:scale-95"
+                  className="px-8 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
                 >
                   {modoEdicion ? "Guardar Cambios" : "Completar Registro"}
                 </button>

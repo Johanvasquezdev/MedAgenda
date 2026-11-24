@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import {
   Bell, Building2, Calendar, CreditCard, LayoutDashboard,
-  MessageSquare, Settings, ShieldAlert, Stethoscope, Users,
+  Settings, ShieldAlert, Stethoscope, Users,
 } from "lucide-react";
 import { AnimatedSidebar } from "@/components/animations/Animatedsidebar";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -35,11 +35,9 @@ export function Sidebar() {
     { label: "Configuración", href: "/admin/settings", icon: Settings },
   ];
 
-  const routes = isAdmin ? adminRoutes : pacienteRoutes;
-
   return (
     <AnimatedSidebar
-      navItems={routes}
+      navItems={isAdmin ? adminRoutes : pacienteRoutes}
       title={isAdmin ? "Administración" : "Menú Principal"}
       nombreUsuario={user?.nombre || "Usuario"}
       rol={user?.rol || (isAdmin ? "Administrador" : "Paciente")}

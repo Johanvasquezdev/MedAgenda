@@ -9,7 +9,7 @@ const geist = Geist({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "MedAgenda",
-  description: "Portal clinico de gestion de citas medicas",
+  description: "Agenda tus citas médicas con especialistas y centros de salud.",
   icons: {
     icon: "/icon.svg",
     shortcut: "/icon.svg",
